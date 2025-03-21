@@ -16,14 +16,14 @@ timezone: Asia/Shanghai
 
 title: CalCobalt # the main title
 
-tagline: '正在开发中' # it will display as the subtitle
+tagline: "正在开发" # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: 'https://calcobalt.icu'
+url: "https://calcobalt.icu"
 
 github:
   username: CalCobalt # change to your GitHub username

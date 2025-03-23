@@ -6,6 +6,7 @@ tags: [翻译, Docker-OS-X, 教程]   # TAG names should always be lowercase
 description: 对于readme.md的翻译
 pin: false
 ---
+
 # Docker-OSX · [关注 @sickcodes Twitter](https://twitter.com/sickcodes)
 
 ![在 Docker 容器中运行 Mac OS X](https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/running-mac-inside-docker-qemu.png "OSX KVM DOCKER")

@@ -429,7 +429,7 @@ Naked Auto：与上面相同，但支持 `-e USERNAME`、`-e PASSWORD` 和 `-e O
 
 Docker-OSX 支持 Kubernetes。
 
-Kubernetes Helm Chart 和文档可以在 [helm 目录](helm/README.md) 下找到。
+Kubernetes Helm Chart 和文档可以在 [helm 目录](#helm-readme) 下找到。
 
 感谢 [cephasara](https://github.com/cephasara) 对此重大贡献的支持。
 
@@ -461,7 +461,7 @@ Kubernetes Helm Chart 和文档可以在 [helm 目录](helm/README.md) 下找到
 
 ## 许可证/贡献
 
-Docker-OSX 采用 [GPL v3+](LICENSE) 许可证。欢迎并非常感谢您的贡献。实际上，您可以将 Docker-OSX 用作工具来创建专有软件。
+Docker-OSX 采用 [GPL v3+](#license) 许可证。欢迎并非常感谢您的贡献。实际上，您可以将 Docker-OSX 用作工具来创建专有软件。
 
 ### 其他有趣的 Docker/QEMU 项目
 
@@ -692,4 +692,3 @@ Docker-OSX 由 Sick.Codes 维护和开发。项目的维护者包括 Sick.Codes 
 - Twitter：[@sickcodes](https://twitter.com/sickcodes)
 - GitHub：[https://github.com/sickcodes](https://github.com/sickcodes)
 - Discord：[https://discord.gg/sickchat](https://discord.gg/sickchat)
-

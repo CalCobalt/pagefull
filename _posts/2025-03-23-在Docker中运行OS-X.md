@@ -2,13 +2,13 @@
 title: 在Docker中运行OS-X
 date: 2025-03-21 18:31:00 +0800
 categories: [翻译, Docker-OS-X]
-tags: [翻译] [Docker-OS-X] [教程]   # TAG names should always be lowercase
+tags: [翻译, Docker-OS-X, 教程]   # TAG names should always be lowercase
 description: 对于readme.md的翻译
 pin: false
 ---
 # Docker-OSX · [关注 @sickcodes Twitter](https://twitter.com/sickcodes)
 
-![在 Docker 容器中运行 Mac OS X](/running-mac-inside-docker-qemu.png?raw=true "OSX KVM DOCKER")
+![在 Docker 容器中运行 Mac OS X](https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/running-mac-inside-docker-qemu.png "OSX KVM DOCKER")
 
 在 Docker 中运行 Mac OS X，接近原生性能！X11 转发！iMessage 安全研究！iPhone USB 支持！macOS 在 Docker 容器中！
 
@@ -19,7 +19,7 @@ pin: false
 Discord 频道在 #docker-osx 中非常活跃，欢迎任何人前来提问、分享想法等。
 
 <p align="center">
-    <a href="https://hub.docker.com/r/sickcodes/docker-osx"><img src="https://dockeri.co/image/sickcodes/docker-osx"/></a><a href="https://discord.gg/sickchat"><a href="https://discord.gg/sickchat" target="_blank"><img src="https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/discord-logo.svg"></a></a>
+    <a href="https://hub.docker.com/r/sickcodes/docker-osx"><img src="https://dockeri.co/image/sickcodes/docker-osx" alt="Docker OSX Image"/></a><a href="https://discord.gg/sickchat"><a href="https://discord.gg/sickchat" target="_blank"><img src="https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/discord-logo.svg" alt="Discord Logo - Docker OSX"></a></a>
 </p>
 
 
@@ -54,7 +54,7 @@ Discord 频道在 #docker-osx 中非常活跃，欢迎任何人前来提问、�
 **Windows 用户：** [点击查看下面的说明](#id-like-to-run-docker-osx-on-windows)！
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=wLezYl77Ll8" target="_blank"><img src="https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/Youtube-Screenshot-Docker-OSX-Setup.png"></a>
+  <a href="https://www.youtube.com/watch?v=wLezYl77Ll8" target="_blank"><img src="https://raw.githubusercontent.com/sickcodes/Docker-OSX/master/Youtube-Screenshot-Docker-OSX-Setup.png" alt="Screenshot of Docker OSX setup on YouTube"></a>
 </p>
 
 第一次来这里？尝试 [初始化设置](#initial-setup)，否则请按以下说明使用 Catalina 或 Big Sur。

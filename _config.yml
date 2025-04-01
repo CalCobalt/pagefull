@@ -16,7 +16,7 @@ timezone:
 
 title: CalCobalt # the main title
 
-tagline: "正在开发" # it will display as the subtitle
+tagline: "正在画新头像！" # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.

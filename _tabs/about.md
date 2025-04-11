@@ -4,5 +4,14 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+# 关于
+
+这里是CalCobalt。在[哔哩哔哩](https://space.bilibili.com/3461564757707456)上关注我！<br>
+欢迎提交[Issue](https://github.com/CalCobalt/pagefull/issues)。
+
+>叮咚鸡叮咚鸡<br>
+>大狗大狗叫叫叫<br>
+>带兴奋兴奋剂<br>
+>一段一段带一段
+
+>好笑吗？我只看到液晶层、背光模组、偏光片，液晶层中的液晶分子在电场作用下改变排列方式，从而控制光线的通过与否来显示图像。背光模组负责提供光源，因为液晶本身不发光。偏光片则用于过滤光线，使光线能够按照特定的方向通过，以提高显示效果。角膜、晶状体、视网膜，角膜表层通过泪膜折射入射光线，晶状体通过睫状肌调节曲率实现变焦。视网膜上的视杆细胞和视锥细胞将光子能量转化为电化学信号，经由双极细胞整合后通过视神经传入外侧膝状体，最终在视皮层V1区完成初级视觉特征提取。虹膜括约肌还在实时调节瞳孔直径以控制进光量。

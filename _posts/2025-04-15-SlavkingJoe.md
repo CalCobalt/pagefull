@@ -9,7 +9,16 @@ pin: true
 
 ## 2025.4.25
 
->Tung Tung Tung Tung Tung Tung Sahur
+### Tung Tung Tung Tung Tung Tung Sahur
 
 ![tun](https://calcobalt.icu/files/tun.png){: .shadow}_Tung Tung Tung Tung Tung Tung Sahur_
 
+---------------------------
+
+## 2025.4.24
+
+### 谁说影像实力派，一定长得像砖块
+
+![smtsshu](https://calcobalt.icu/files/smartisanshu.png){: .shadow}_谁说影像实力派，一定长得像砖块_
+
+-----------

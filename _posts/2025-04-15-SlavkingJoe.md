@@ -1,6 +1,6 @@
 ---
 title: 名人名画
-date: 2025-04-09 11:38:00 +0800
+date: 2025-04-15 11:38:00 +0800
 categories: [名人名言, SlavkingJoe]
 tags: [备份, 名画, 档案]     # TAG names should always be lowercase
 description: SlavkingJoe售价两毛五的名画

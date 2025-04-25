@@ -11,7 +11,7 @@ pin: true
 
 ### Tung Tung Tung Tung Tung Tung Sahur
 
-![tun](https://calcobalt.icu/files/tun.png){: .shadow}_Tung Tung Tung Tung Tung Tung Sahur_
+![tun](/files/tun.png){: .shadow}_Tung Tung Tung Tung Tung Tung Sahur_
 
 ---------------------------
 
@@ -19,6 +19,6 @@ pin: true
 
 ### 谁说影像实力派，一定长得像砖块
 
-![smtsshu](https://calcobalt.icu/files/smartisanshu.png){: .shadow}_谁说影像实力派，一定长得像砖块_
+![smtsshu](/files/smartisanshu.png){: .shadow}_谁说影像实力派，一定长得像砖块_
 
 -----------

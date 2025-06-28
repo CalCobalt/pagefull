@@ -5,7 +5,7 @@ order: 4
 ---
 
 这里是CalCobalt。在[哔哩哔哩](https://space.bilibili.com/3461564757707456)上关注我！<br>
-欢迎提交[Issue](https://github.com/CalCobalt/pagefull/issues)。
+
 
 >叮咚鸡叮咚鸡<br>
 >大狗大狗叫叫叫<br>

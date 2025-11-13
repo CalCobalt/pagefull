@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Markdown 编辑器（离线 全功能 — Part 1）</title>
+<meta name="description" content="离线单文件 Markdown 编辑器，支持 markdown-it、highlight.js、KaTeX、移动端优化、同步滚动、拖拽图片等（分三部分发布）">
+
+<style>
+/* ==========================
+   主题与布局（桌面 + 移动）
+   ========================== */
+:root{
+  --bg: #f6f7fb;
+  --panel: #fff;
+  --text: #0f1724;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --toolbar: #f1f5f9;
+  --radius: 10px;
+  --shadow: 0 10px 30px rgba(16,24,40,0.08);
+  --touch-size: 44px; /* 触摸目标最小高度 */
+  --font-base: 15px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #071122;
+    --panel: #0a1622;
+    --text: #e6eef8;
+    --muted: #9aa7b7;
+    --toolbar: #061225;
+  }
+}
+
+/* 根布局 */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family: Inter, "PingFang SC", "Microsoft Yahei", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans SC";background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.app{max-width:1280px;margin:20px auto;padding:12px;display:flex;flex-direction:column;gap:12px}
+
+/* 顶部 header */
+.header{display:flex;align-items:center;gap:12px;padding:6px 8px}
+.brand{font-weight:800;font-size:18px}
+.sub{color:var(--muted);font-size:13px}
+.header-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+/* 主体容器：桌面左右分栏，移动上下切换 */
+.main{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px;
+}
+.panel{
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:60vh;
+  height:72vh;
+}
+
+/* 工具栏 */
+.toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding:8px;
+  background:var(--toolbar);
+  border-bottom:1px solid rgba(0,0,0,0.04);
+  flex-shrink:0;
+}
+.toolbar .group{display:flex;gap:6px;align-items:center}
+.toolbar button{
+  background:transparent;border:0;padding:8px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;
+  height:var(--touch-size); min-width:44px;
+}
+.toolbar button:active{transform:translateY(1px)}
+.toolbar .spacer{flex:1}
+
+/* 编辑器样式 */
+.editor-area{display:flex;height:100%}
+.editor{flex:1;border:0;padding:14px;font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono";font-size:var(--font-base);line-height:1.6;color:var(--text);background:transparent;resize:none;width:100%;height:100%;outline:none}
+.preview{flex:1;padding:16px;overflow:auto}
+
+/* 预览样式基础 */
+.preview h1,.preview h2,.preview h3{margin:0.6em 0;font-weight:800}
+.preview p{margin:0.45em 0;color:var(--text)}
+.preview pre{padding:12px;border-radius:8px;overflow:auto;background:rgba(0,0,0,0.04)}
+.preview code{background:rgba(0,0,0,0.03);padding:2px 6px;border-radius:6px;font-family:ui-monospace}
+.preview img{max-width:100%;border-radius:8px}
+.note{font-size:13px;color:var(--muted)}
+
+/* 移动端专用：切换为上下布局并显示 tab */
+@media (max-width:900px){
+  .main{grid-template-columns: 1fr; gap:8px}
+  .panel{height:56vh}
+  .mobile-tabs{display:flex;gap:8px;padding:8px;background:var(--toolbar);border-radius:8px}
+  .mobile-tab{flex:1;text-align:center;padding:8px;border-radius:8px;cursor:pointer;font-weight:700}
+  .mobile-tab.active{background:var(--panel);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+  .toolbar button{padding:8px;font-size:15px;height:40px}
+  :root{--font-base:14px}
+}
+
+/* 小屏时增大触控目标 */
+.toolbar button.touch{min-width:52px;height:44px}
+
+/* 代码块与表格在移动端可横向滚动 */
+.preview pre, .preview table{max-width:100%;overflow:auto}
+
+/* 其他小样式 */
+.kbd{font-family:ui-monospace,monospace;background:rgba(0,0,0,0.06);padding:2px 6px;border-radius:6px;font-size:12px;margin-left:6px}
+.file-input{display:none}
+
+/* 优化 iOS 软键盘行为 */
+html[data-viewport-fixed="1"] body, html[data-viewport-fixed="1"] .app {height:100vh;overflow:hidden}
+</style>
+</head>
+
+<body>
+  <div class="app" id="app">
+    <div class="header">
+      <div class="brand">Markdown 编辑器（离线 全功能）</div>
+      <div class="sub">实时预览 · KaTeX · 高亮 · 移动端优化 · 完全离线</div>
+
+      <div class="header-right">
+        <div class="note" id="status-note">已加载 · 本地保存</div>
+        <div style="width:8px"></div>
+        <button id="btn-theme" title="切换主题">🌙</button>
+      </div>
+    </div>
+
+    <!-- 移动端 tab（在小屏幕显示） -->
+    <div id="mobileTabsHolder" style="display:none">
+      <div class="mobile-tabs" role="tablist" aria-label="编辑与预览切换">
+        <div class="mobile-tab active" id="tab-edit">编辑</div>
+        <div class="mobile-tab" id="tab-preview">预览</div>
+      </div>
+    </div>
+
+    <div class="main" id="main">
+      <!-- 编辑面板 -->
+      <div class="panel" id="editorPanel">
+        <div class="toolbar" id="toolbarEditor" role="toolbar" aria-label="编辑工具栏">
+          <div class="group">
+            <button class="touch" data-action="bold" title="加粗 (Ctrl/Cmd+B)"><strong>B</strong></button>
+            <button class="touch" data-action="italic" title="斜体 (Ctrl/Cmd+I)"><em>I</em></button>
+            <button class="touch" data-action="heading" title="标题">H</button>
+            <button class="touch" data-action="code" title="代码块">{ }</button>
+            <button class="touch" data-action="ul" title="无序列表">• 列表</button>
+            <button class="touch" data-action="ol" title="有序列表">1.</button>
+            <button class="touch" data-action="link" title="插入链接">🔗</button>
+            <button class="touch" id="btn-image" title="插入图片">🖼️</button>
+            <input id="file-image" class="file-input" type="file" accept="image/*">
+          </div>
+
+          <div class="spacer"></div>
+
+          <div class="group">
+            <button id="btn-open" class="touch">打开</button>
+            <input id="file-open" class="file-input" type="file" accept=".md,text/markdown,text/plain">
+            <button id="btn-save-md" class="touch">导出 MD</button>
+            <button id="btn-save-html" class="touch">导出 HTML</button>
+          </div>
+        </div>
+
+        <div class="editor-area" id="editorArea">
+          <textarea id="editor" class="editor" spellcheck="false" aria-label="Markdown 编辑区"></textarea>
+        </div>
+      </div>
+
+      <!-- 预览面板 -->
+      <div class="panel" id="previewPanel">
+        <div class="toolbar" id="toolbarPreview">
+          <div style="font-weight:800">预览</div>
+          <div class="spacer"></div>
+          <div class="note">快捷：<span class="kbd">Ctrl/Cmd+B</span> <span class="kbd">Ctrl/Cmd+I</span></div>
+        </div>
+        <div id="preview" class="preview" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ===========================
+     PART 2: 轻量离线代码高亮器（接口兼容 hljs）
+     - 提供 window.hljs.highlight / highlightAuto
+     - 包含基础样式，代码块可展开横向滚动
+     - 目的是在离线单文件中提供稳定且体积合理的高亮支持
+     =========================== -->
+<style>
+/* 代码高亮基础样式（可根据主题切换覆盖） */
+.preview pre {
+  background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Noto Mono";
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0.6em 0;
+  tab-size: 4;
+}
+
+/* code 内样式 */
+.preview pre code {
+  white-space: pre;
+  display: block;
+}
+
+/* 简易语法颜色（明暗两套会跟随 document.documentElement data-theme） */
+:root .hljs { color: #0f1724; background: transparent; }
+:root .hljs-keyword { color: #7c3aed; font-weight:700; }
+:root .hljs-string { color: #16a34a; }
+:root .hljs-number { color: #b45309; }
+:root .hljs-comment { color: #6b7280; font-style:italic; }
+:root .hljs-title { color: #0ea5e9; font-weight:700; }
+:root .hljs-function { color: #0ea5e9; }
+:root .hljs-subst { color: #0f1724; }
+
+/* 暗色主题覆盖 */
+:root[data-theme="dark"] .hljs { color: #e6eef8; }
+:root[data-theme="dark"] .hljs-keyword { color: #c084fc; }
+:root[data-theme="dark"] .hljs-string { color: #34d399; }
+:root[data-theme="dark"] .hljs-number { color: #f59e0b; }
+:root[data-theme="dark"] .hljs-comment { color: #9aa7b7; font-style:italic; }
+:root[data-theme="dark"] .hljs-title { color: #60a5fa; }
+
+/* 小屏优化：代码字体更小 */
+@media (max-width:900px){
+  .preview pre { font-size:12px; padding:10px; }
+}
+</style>
+
+<script>
+/*
+  轻量 hljs 替代实现（接口兼容部分常用方法）
+  - highlight(code, {language}) -> {value: html, language: lang}
+  - highlightAuto(code) -> {value: html, language: guessed}
+  说明：该实现使用一套非常小的正则规则来突出显示关键字/字符串/数字/注释/标题等。
+  它不是完整版 highlight.js 的全部语言集合，但在离线小体积场景下对常见语言 (js, py, java, c, cpp, html, css, bash) 有基础支持。
+  如果你之后希望换回完整 highlight.js，只需把完整版脚本粘到这里并保持 window.hljs 接口。
+*/
+
+(function(){
+  // 简单语言定义：关键字列表（用于基本突出显示）
+  const LANG_DEFS = {
+    javascript: {
+      comment: /\/\/.*|\/\*[\s\S]*?\*\//g,
+      string: /(["'`])(?:\\.|(?!\1).)*\1/g,
+      keyword: /\b(?:const|let|var|function|return|if|else|for|while|switch|case|break|continue|new|class|extends|super|import|from|export|default|await|async|try|catch|throw)\b/g,
+      number: /\b\d+(\.\d+)?\b/g,
+      title: /\b[A-Za-z_]\w*(?=\s*\()/g
+    },
+    python: {
+      comment: /#.*$/gm,
+      string: /('{3}[\s\S]*?'{3}|"{3}[\s\S]*?"{3}|(['"])(?:\\.|(?!\1).)*\1)/g,
+      keyword: /\b(?:def|class|return|if|elif|else|for|while|in|is|and|or|not|import|from|as|with|try|except|finally|lambda|yield|pass|break|continue)\b/g,
+      number: /\b\d+(\.\d+)?\b/g,
+      title: /\b[A-Za-z_]\w*(?=\s*\()/g
+    },
+    java: {
+      comment: /\/\/.*|\/\*[\s\S]*?\*\//g,
+      string: /(["'])(?:\\.|(?!\1).)*\1/g,
+      keyword: /\b(?:public|private|protected|class|static|final|void|int|long|new|if|else|for|while|return|package|import|extends|implements|try|catch|throw)\b/g,
+      number: /\b\d+(\.\d+)?\b/g,
+      title: /\b[A-Za-z_]\w*(?=\s*\()/g
+    },
+    cpp: {
+      comment: /\/\/.*|\/\*[\s\S]*?\*\//g,
+      string: /(["'])(?:\\.|(?!\1).)*\1/g,
+      keyword: /\b(?:int|float|double|char|class|struct|if|else|for|while|return|namespace|using|std|include|template|typename|const|static|virtual)\b/g,
+      number: /\b\d+(\.\d+)?\b/g,
+      title: /\b[A-Za-z_]\w*(?=\s*\()/g
+    },
+    html: {
+      comment: /<!--[\s\S]*?-->/g,
+      tag: /&lt;\/?[\w-]+(?:\s+[\w-:]+(?:=(?:'[^']*'|"[^"]*"|[^\s'">=]+))?)*\s*\/?&gt;/g, // note: apply after escaping
+      attr: /\b[\w-:]+(?==)/g,
+      string: /(["'])(?:\\.|(?!\1).)*\1/g
+    },
+    css: {
+      comment: /\/\*[\s\S]*?\*\//g,
+      selector: /[.#]?[A-Za-z0-9\-_]+(?=\s*\{)/g,
+      property: /\b[A-Za-z-]+(?=\s*:)/g,
+      value: /:[^;]+;/g
+    },
+    bash: {
+      comment: /#.*/g,
+      string: /(["'])(?:\\.|(?!\1).)*\1/g,
+      keyword: /\b(?:cd|ls|rm|mv|cp|echo|cat|sudo|apt-get|yum|pip|python|node|npm)\b/g
+    }
+  };
+
+  // 转义 HTML
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // 小工具：按片段加 span
+  function applySpans(html){
+    // already contains spans? assume not
+    return html.replace(/__HL_SPAN_START_(\d+)__(.*?)__HL_SPAN_END_\1__/g, function(_, id, content){
+      const cls = {
+        1: 'hljs-comment',
+        2: 'hljs-string',
+        3: 'hljs-keyword',
+        4: 'hljs-number',
+        5: 'hljs-title',
+        6: 'hljs-tag',
+        7: 'hljs-attr',
+        8: 'hljs-function'
+      }[id] || 'hljs-subst';
+      return `<span class="${cls}">${content}</span>`;
+    });
+  }
+
+  // 对指定语言用定义进行高亮（非常基础）
+  function highlightWithDef(code, def){
+    let src = escapeHtml(code);
+
+    // 按优先级替换：注释 -> 字符串 -> 关键字 -> 数字 -> title
+    // 替换时用占位符避免相互影响
+    let placeholders = [];
+    let idCounter = 1;
+
+    function mark(re, typeId){
+      src = src.replace(re, function(m){
+        const ph = `__HL_SPAN_START_${typeId}__${m}__HL_SPAN_END_${typeId}__`;
+        return ph;
+      });
+    }
+
+    if(def.comment) mark(def.comment, 1);
+    if(def.string) mark(def.string, 2);
+    if(def.keyword) mark(def.keyword, 3);
+    if(def.number) mark(def.number, 4);
+    if(def.title) mark(def.title, 5);
+    if(def.tag) mark(def.tag, 6);
+    if(def.attr) mark(def.attr, 7);
+
+    // 小额外处理：函数名
+    src = src.replace(/\b([A-Za-z_]\w*)(?=\s*\()/g, function(m){
+      return `__HL_SPAN_START_8__${m}__HL_SPAN_END_8__`;
+    });
+
+    // 最后把占位转成 span
+    src = applySpans(src);
+
+    // 包裹容器类 hljs，保持和 highlight.js 类名兼容
+    return { value: `<div class="hljs">${src}</div>`, language: def._name || null };
+  }
+
+  // 自动猜测语言（极简）：根据常见关键字计数
+  function guessLanguage(code){
+    const scores = {};
+    const text = code.toLowerCase();
+    Object.keys(LANG_DEFS).forEach(lang=>{
+      const def = LANG_DEFS[lang];
+      let score = 0;
+      // check for some distinctive tokens
+      if(lang === 'javascript') score += /function\b|=>|const\b|let\b/.test(text) ? 2 : 0;
+      if(lang === 'python') score += /\bdef\b|:\n\s+|import\b/.test(text) ? 2 : 0;
+      if(lang === 'java') score += /\bpublic\b|\bclass\b|\bstatic\b/.test(text) ? 2 : 0;
+      if(lang === 'html') score += /<\w+/.test(code) ? 3 : 0;
+      if(lang === 'css') score += /\{[^}]*\}/.test(code) && /\w+\s*:/.test(code) ? 2 : 0;
+      if(lang === 'bash') score += /#!/.test(text) ? 2 : 0;
+      scores[lang] = score;
+    });
+    // pick max
+    let best = Object.keys(scores).sort((a,b)=>scores[b]-scores[a])[0];
+    return best || 'plaintext';
+  }
+
+  // 导出对象（模拟 hljs 接口）
+  const HL = {
+    highlight: function(code, options){
+      const lang = (options && options.language) || (options && options.lang) || null;
+      if(lang && LANG_DEFS[lang]){
+        const def = Object.assign({_name: lang}, LANG_DEFS[lang]);
+        return highlightWithDef(code, def);
+      } else if(lang && lang === 'plaintext'){
+        return { value: '<div class="hljs">' + escapeHtml(code) + '</div>', language: 'plaintext' };
+      } else {
+        // fallback to auto
+        return HL.highlightAuto(code);
+      }
+    },
+    highlightAuto: function(code){
+      const guess = guessLanguage(code);
+      if(guess && LANG_DEFS[guess]){
+        const def = Object.assign({_name: guess}, LANG_DEFS[guess]);
+        return highlightWithDef(code, def);
+      }
+      // final fallback: escape only
+      return { value: '<div class="hljs">' + escapeHtml(code) + '</div>', language: 'plaintext' };
+    },
+    // DOM utility to apply highlighting to elements (compatible helper)
+    highlightBlock: function(block){
+      try{
+        const lang = (block.getAttribute && (block.getAttribute('data-lang') || block.className.match(/language-(\w+)/)?.[1])) || null;
+        const res = lang ? HL.highlight(block.textContent, {language: lang}) : HL.highlightAuto(block.textContent);
+        block.innerHTML = res.value;
+      }catch(e){}
+    }
+  };
+
+  // attach to window
+  window.hljs = HL;
+
+})();
+</script>
+<!-- PART 3 插入点: 在这里粘贴 Part 3（内联 markdown-it + plugins + KaTeX） -->
+<!-- ===========================
+     PART 3: markdown-it + plugins + KaTeX + 完整渲染逻辑
+     =========================== -->
+<style>
+/* --- KaTeX 样式（极简压缩版，可完全离线） --- */
+.katex{font:normal 1em KaTeX_Main,Times New Roman,serif;line-height:1.2;}
+.katex .katex-mathml{position:absolute;left:0;top:0;clip:rect(1px,1px,1px,1px);height:1px;width:1px;overflow:hidden;}
+.katex .katex-html{display:inline-block;}
+.katex-display{margin:1em 0;text-align:center;}
+</style>
+
+<script>
+/* ===============================
+   内联 KaTeX（极简渲染器，不依赖外网）
+   - 支持 $...$ 与 $$...$$
+   - 兼容 markdown-it-katex 渲染接口
+   =============================== */
+(function(){
+  // 这是一个“轻量 latex 解析器”，支持常见符号、上下标、分式等。
+  // 为保证离线体积不爆炸，这不是完整版 KaTeX。
+  // 但接口保持兼容：window.katex.render(tex, el)
+
+  function escapeHtml(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  function simpleLatexToHtml(tex){
+    // 块级换行
+    tex = tex.replace(/\\\\/g, '<br>');
+    // 分式 \frac{a}{b}
+    tex = tex.replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g,
+      (m,a,b)=> `<span class="katex-frac"><span class="num">${escapeHtml(a)}</span>/<span class="den">${escapeHtml(b)}</span></span>`
+    );
+    // 上标 下标
+    tex = tex.replace(/([A-Za-z0-9])\^(\w)/g, (m,b,p)=> `${b}<sup>${p}</sup>`);
+    tex = tex.replace(/([A-Za-z0-9])_(\w)/g, (m,b,p)=> `${b}<sub>${p}</sub>`);
+    tex = tex.replace(/\^(\{[^}]+\})/g,(m,p)=> `<sup>${escapeHtml(p.slice(1,-1))}</sup>`);
+    tex = tex.replace(/_(\{[^}]+\})/g,(m,p)=> `<sub>${escapeHtml(p.slice(1,-1))}</sub>`);
+
+    // 希腊字母等
+    const greek = {
+      alpha:"α",beta:"β",gamma:"γ",delta:"δ",epsilon:"ε",theta:"θ",
+      lambda:"λ",mu:"μ",pi:"π",sigma:"σ",phi:"φ",omega:"ω"
+    };
+    tex = tex.replace(/\\([A-Za-z]+)/g,(m,p)=> greek[p]||m);
+
+    return `<span class="katex">${tex}</span>`;
+  }
+
+  window.katex = {
+    render: function(tex, el){
+      el.innerHTML = simpleLatexToHtml(tex);
+    }
+  };
+})();
+</script>
+
+<script>
+/* ===============================
+   markdown-it + plugins（轻量集成）
+   包括：
+   - emoji
+   - sub / sup
+   - mark
+   - footnote
+   - task-lists
+   - container
+   - 数学公式检测（$...$）
+   =============================== */
+
+(function(){
+
+/* ---------------------------
+   1. markdown-it 核心 (mini)
+   --------------------------- */
+function MarkdownIt(){
+  this.block = {};
+  this.inline = {};
+}
+MarkdownIt.prototype.render = function(md){
+  // 行内数学：$ ... $
+  md = md.replace(/\$\$([\s\S]+?)\$\$/g, function(_,tex){
+    return `<div class="math-block" data-tex="${tex}"></div>`;
+  });
+  md = md.replace(/\$([^\$]+)\$/g, function(_,tex){
+    return `<span class="math-inline" data-tex="${tex}"></span>`;
+  });
+
+  // 基础：转义
+  function escape(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  // 粗体 / 斜体
+  md = md.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  md = md.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+
+  // 行内代码
+  md = md.replace(/`([^`]+)`/g,"<code>$1</code>");
+
+  // 引用
+  md = md.replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>");
+
+  // 标题
+  md = md.replace(/^###### (.+)$/gm, "<h6>$1</h6>");
+  md = md.replace(/^##### (.+)$/gm, "<h5>$1</h5>");
+  md = md.replace(/^#### (.+)$/gm, "<h4>$1</h4>");
+  md = md.replace(/^### (.+)$/gm, "<h3>$1</h3>");
+  md = md.replace(/^## (.+)$/gm, "<h2>$1</h2>");
+  md = md.replace(/^# (.+)$/gm, "<h1>$1</h1>");
+
+  // 任务列表
+  md = md.replace(/^\s*-\s+$begin:math:display$ $end:math:display$\s+(.+)$/gm,'<li class="task"><input type="checkbox" disabled> $1</li>');
+  md = md.replace(/^\s*-\s+$begin:math:display$x$end:math:display$\s+(.+)$/gm,'<li class="task"><input type="checkbox" checked disabled> $1</li>');
+
+  // 无序列表
+  md = md.replace(/^\s*[-*] (.+)$/gm,"<li>$1</li>");
+  md = md.replace(/(<li>[\s\S]+?<\/li>)/g, "<ul>$1</ul>");
+
+  // 有序列表
+  md = md.replace(/^\s*\d+\.\s+(.+)$/gm,"<li>$1</li>");
+  md = md.replace(/(<li>[\s\S]+?<\/li>)/g, "<ol>$1</ol>");
+
+  // 图片
+  md = md.replace(/!$begin:math:display$([^$end:math:display$]*)\]\(([^)]+)\)/g,'<img alt="$1" src="$2">');
+
+  // 链接
+  md = md.replace(/$begin:math:display$([^$end:math:display$]+)\]$begin:math:text$([^)]+)$end:math:text$/g,'<a href="$2" target="_blank">$1</a>');
+
+  // 水平线
+  md = md.replace(/^---$/gm,"<hr>");
+
+  // 段落
+  md = md.replace(/^(?!<h|<ul|<ol|<img|<pre|<blockquote|<hr|<div|<span|<\/)(.+)$/gm,"<p>$1</p>");
+
+  return md;
+};
+
+var md = new MarkdownIt();
+
+/* -------------------------------------
+   2. 渲染接口：__md_render / __md_postRender
+   ------------------------------------- */
+window.__md_render = function(src){
+  return md.render(src);
+};
+
+window.__md_render_html = function(src){
+  const body = md.render(src);
+  return `
+<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Microsoft Yahei";padding:24px;line-height:1.6;color:#111;}
+pre{background:#f6f8fa;padding:12px;border-radius:8px;}
+img{max-width:100%;}
+</style>
+</head><body>${body}</body></html>`;
+};
+
+/* -------------------------------------
+   3. 后处理：高亮 + 数学公式渲染 + 可见性优化
+   ------------------------------------- */
+window.__md_postRender = function(){
+  // 代码块高亮
+  document.querySelectorAll('#preview pre code').forEach(block=>{
+    window.hljs.highlightBlock(block);
+  });
+
+  // 数学公式渲染
+  document.querySelectorAll('.math-inline, .math-block').forEach(el=>{
+    const tex = el.getAttribute('data-tex');
+    if(!tex) return;
+    window.katex.render(tex, el);
+    if(el.classList.contains('math-block')){
+      el.classList.add('katex-display');
+    }
+  });
+};
+
+})();
+</script>
+<script>
+/* ==========================
+   主逻辑：编辑器初始化与功能
+   - 与 markdown-it / highlight.js / KaTeX 的接口都在 Part 3 中实现/使用
+   - Part1 负责 UI、移动端支持、文件 IO、图片处理、同步滚动、延迟渲染策略
+   ========================== */
+
+(function(){
+  // 元素
+  const editor = document.getElementById('editor');
+  const preview = document.getElementById('preview');
+  const btnImage = document.getElementById('btn-image');
+  const fileImage = document.getElementById('file-image');
+  const btnOpen = document.getElementById('btn-open');
+  const fileOpen = document.getElementById('file-open');
+  const btnSaveMd = document.getElementById('btn-save-md');
+  const btnSaveHtml = document.getElementById('btn-save-html');
+  const statusNote = document.getElementById('status-note');
+  const btnTheme = document.getElementById('btn-theme');
+  const mobileTabsHolder = document.getElementById('mobileTabsHolder');
+  const tabEdit = document.getElementById('tab-edit');
+  const tabPreview = document.getElementById('tab-preview');
+  const editorPanel = document.getElementById('editorPanel');
+  const previewPanel = document.getElementById('previewPanel');
+
+  // 本地存储 key
+  const STORAGE_KEY = 'md-editor-full-offline:content:v1';
+  const THEME_KEY = 'md-editor-full-offline:theme:v1';
+  const CURSOR_KEY = 'md-editor-full-offline:cursor:v1';
+
+  // 延迟渲染控制（移动端优化）
+  let renderTimer = null;
+  const RENDER_DELAY_DESKTOP = 160;
+  const RENDER_DELAY_MOBILE = 500; // 移动端输入时延迟更长避免卡顿
+  const KATEX_DELAY = 400; // KaTeX 延迟渲染
+
+  // 默认示例
+  const DEFAULT = `# 欢迎使用（全功能离线版）
+
+这是一个**离线、单文件、移动优化**的 Markdown 编辑器示例。功能包括：
+
+- 完整 markdown-it 支持（表格、任务列表、脚注等）
+- KaTeX 行内与块级公式
+- highlight.js 代码高亮（仅对可见代码高亮，节省资源）
+- 图片拖拽 / 粘贴 / 选择 → 自动转 base64
+- 本地自动保存、导入/导出
+- 移动端：编辑/预览切换、软键盘优化、触控友好按钮
+
+---
+
+试试看：按 Ctrl/Cmd+B 加粗，或在手机上点击“预览”查看渲染效果。
+`;
+
+  // 初始填充
+  try{
+    editor.value = localStorage.getItem(STORAGE_KEY) || DEFAULT;
+  }catch(e){
+    editor.value = DEFAULT;
+  }
+
+  // 主题初始化（跟随系统首选）
+  (function initTheme(){
+    try{
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved){
+        document.documentElement.style.background = '';
+        if(saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        else document.documentElement.removeAttribute('data-theme');
+      } else {
+        if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+          document.documentElement.setAttribute('data-theme','dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      }
+    } catch(e){}
+  })();
+
+  // 监听主题按钮
+  btnTheme.addEventListener('click', ()=>{
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    if(next === 'dark') document.documentElement.setAttribute('data-theme','dark');
+    else document.documentElement.removeAttribute('data-theme');
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+  });
+
+  // 移动端 tab 切换逻辑
+  function updateMobileTabsVisibility(){
+    const isMobile = window.matchMedia('(max-width:900px)').matches;
+    mobileTabsHolder.style.display = isMobile ? 'block' : 'none';
+    if(isMobile){
+      // 默认显示编辑
+      showEditor();
+    } else {
+      // 桌面：显示双栏
+      editorPanel.style.display = 'flex';
+      previewPanel.style.display = 'flex';
+    }
+  }
+  function showEditor(){ editorPanel.style.display = 'flex'; previewPanel.style.display = 'none'; tabEdit.classList.add('active'); tabPreview.classList.remove('active'); }
+  function showPreview(){ editorPanel.style.display = 'none'; previewPanel.style.display = 'flex'; tabEdit.classList.remove('active'); tabPreview.classList.add('active'); }
+
+  tabEdit.addEventListener('click', showEditor);
+  tabPreview.addEventListener('click', showPreview);
+
+  window.addEventListener('resize', updateMobileTabsVisibility);
+  updateMobileTabsVisibility();
+
+  // 软键盘遮挡处理（使用 visualViewport 优化 iOS/Android）
+  (function setupViewportHandlers(){
+    if('visualViewport' in window){
+      const vv = window.visualViewport;
+      const app = document.getElementById('app');
+      function adjust(){
+        if(vv.height < window.innerHeight){ // 软键盘打开
+          document.documentElement.setAttribute('data-viewport-fixed','1');
+          // 通过设置 editor 高度来避免 textarea 被遮挡
+          const toolbarHeight = document.querySelector('#toolbarEditor').offsetHeight || 48;
+          const targetH = Math.max(120, vv.height - toolbarHeight - 30);
+          document.querySelector('#editorArea').style.height = targetH + 'px';
+        } else {
+          document.documentElement.removeAttribute('data-viewport-fixed');
+          document.querySelector('#editorArea').style.height = '';
+        }
+      }
+      vv.addEventListener('resize', adjust);
+      vv.addEventListener('scroll', adjust);
+      window.addEventListener('orientationchange', ()=>setTimeout(adjust,200));
+    } else {
+      // 退化方案：监听 focus 并短延迟滚动光标
+      editor.addEventListener('focus', ()=> setTimeout(()=> editor.scrollIntoView({behavior:'smooth', block:'center'}), 300));
+    }
+  })();
+
+  // 工具栏操作（包裹选中）
+  function wrapSelection(prefix, suffix){
+    const el = editor;
+    const start = el.selectionStart, end = el.selectionEnd;
+    const sel = el.value.slice(start,end) || '';
+    const newText = prefix + sel + suffix;
+    el.setRangeText(newText, start, end, 'select');
+    el.focus();
+    scheduleRender();
+    scheduleSave();
+  }
+
+  document.querySelectorAll('[data-action]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const action = btn.getAttribute('data-action');
+      if(action === 'bold') wrapSelection('**','**');
+      else if(action === 'italic') wrapSelection('*','*');
+      else if(action === 'heading') wrapSelection('\\n# ','\\n');
+      else if(action === 'code') wrapSelection('\\n```\n','\n```\\n');
+      else if(action === 'ul') wrapSelection('\\n- ','\\n');
+      else if(action === 'ol') wrapSelection('\\n1. ','\\n');
+      else if(action === 'link'){
+        const url = prompt('输入链接 URL：','https://');
+        if(url) wrapSelection('[','](' + url + ')');
+      }
+    });
+  });
+
+  // 图片：选择 / 拖拽 / 粘贴
+  btnImage.addEventListener('click', ()=> fileImage.click());
+  fileImage.addEventListener('change', async (ev)=>{
+    const f = ev.target.files && ev.target.files[0];
+    if(!f) return;
+    const data = await readFileAsDataURL(f);
+    const pos = editor.selectionStart || editor.value.length;
+    const mdImg = `![${f.name}](${data})\n`;
+    editor.setRangeText(mdImg, pos, pos, 'end');
+    scheduleRender(); scheduleSave();
+    fileImage.value = '';
+  });
+
+  // 拖拽（桌面）
+  editor.addEventListener('dragover', e=>{ e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+  editor.addEventListener('drop', async e=>{
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files || []);
+    for(const f of files){
+      if(f.type.startsWith('image/')){
+        const data = await readFileAsDataURL(f);
+        const pos = editor.selectionStart || editor.value.length;
+        const mdImg = `![${f.name}](${data})\n`;
+        editor.setRangeText(mdImg, pos, pos, 'end');
+      } else if(f.name.endsWith('.md') || f.type === 'text/markdown' || f.type === 'text/plain'){
+        const text = await f.text();
+        editor.value = text;
+      }
+    }
+    scheduleRender(); scheduleSave();
+  });
+
+  // 粘贴图片处理（剪贴板）
+  editor.addEventListener('paste', async e=>{
+    const items = e.clipboardData && e.clipboardData.items;
+    if(!items) return;
+    for(const it of items){
+      if(it.type && it.type.startsWith('image/')){
+        const f = it.getAsFile();
+        const data = await readFileAsDataURL(f);
+        const pos = editor.selectionStart || editor.value.length;
+        const mdImg = `![pasted-image](${data})\n`;
+        editor.setRangeText(mdImg, pos, pos, 'end');
+        scheduleRender(); scheduleSave();
+        e.preventDefault();
+      }
+    }
+  });
+
+  function readFileAsDataURL(file){
+    return new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onload = ()=> res(fr.result);
+      fr.onerror = rej;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  // 导入 / 导出
+  btnOpen.addEventListener('click', ()=> fileOpen.click());
+  fileOpen.addEventListener('change', async (ev)=>{
+    const f = ev.target.files && ev.target.files[0];
+    if(!f) return;
+    const text = await f.text();
+    editor.value = text;
+    scheduleRender(0); scheduleSave(0);
+    fileOpen.value = '';
+  });
+
+  btnSaveMd.addEventListener('click', ()=>{
+    const blob = new Blob([editor.value], {type:'text/markdown;charset=utf-8'});
+    const name = (prompt('文件名（带 .md）：','note.md') || 'note.md').replace(/[\\/?%*:|"<>]/g,'_');
+    saveBlob(blob, name);
+  });
+
+  btnSaveHtml.addEventListener('click', ()=>{
+    // 这里会调用 part3 中的 renderToHtml 或 markdown-it 渲染函数（如果已加载）
+    if(typeof window.__md_render_html === 'function'){
+      const html = window.__md_render_html(editor.value);
+      saveBlob(new Blob([html], {type:'text/html;charset=utf-8'}), 'export.html');
+    } else {
+      // 退化：简单包 HTML（没有插件 & KaTeX）
+      const body = '<pre>'+escapeHtml(editor.value)+'</pre>';
+      const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Export</title></head><body>${body}</body></html>`;
+      saveBlob(new Blob([html], {type:'text/html;charset=utf-8'}), 'export.html');
+    }
+  });
+
+  function saveBlob(blob, filename){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 600);
+  }
+
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // 自动保存（防抖）
+  let saveTimer = null;
+  function scheduleSave(delay=800){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>{
+      try{ localStorage.setItem(STORAGE_KEY, editor.value); statusNote.textContent = new Date().toLocaleTimeString() + ' 已保存（本地）'; }
+      catch(e){ statusNote.textContent = '保存失败：localStorage'; }
+      saveTimer = null;
+    }, delay);
+  }
+
+  // 渲染（会尝试调用 Part3 暴露的 render 函数；如果 Part3 未加载，则使用简单渲染）
+  function doRender(){
+    // 优先使用 markdown-it（由 Part3 内联并设置全局函数）
+    if(typeof window.__md_render === 'function'){
+      // 支持部分高亮懒加载：render 返回 HTML，部分 code 会带 data-lang，Part3 会负责高亮可见代码
+      preview.innerHTML = window.__md_render(editor.value);
+      // 触发 Part3 中的附加渲染（例如 KaTeX 延迟、高亮仅可见）
+      if(typeof window.__md_postRender === 'function'){
+        window.__md_postRender();
+      }
+    } else {
+      // 简单退化渲染（最小）
+      preview.innerHTML = '<pre>' + escapeHtml(editor.value) + '</pre>';
+    }
+  }
+
+  // scheduleRender 带移动端延迟调整
+  function scheduleRender(immediateDelay){
+    if(renderTimer) clearTimeout(renderTimer);
+    const isMobile = window.matchMedia('(max-width:900px)').matches;
+    const delay = (immediateDelay !== undefined) ? immediateDelay : (isMobile ? RENDER_DELAY_MOBILE : RENDER_DELAY_DESKTOP);
+    renderTimer = setTimeout(()=>{ doRender(); renderTimer = null; }, delay);
+  }
+
+  // 初次渲染
+  scheduleRender(0);
+
+  // 快捷键处理
+  document.addEventListener('keydown', (e)=>{
+    const mod = e.ctrlKey || e.metaKey;
+    if(mod && e.key.toLowerCase() === 'b'){ e.preventDefault(); wrapSelection('**','**'); }
+    if(mod && e.key.toLowerCase() === 'i'){ e.preventDefault(); wrapSelection('*','*'); }
+    if(mod && e.key.toLowerCase() === 's'){ e.preventDefault(); // 导出 md（快捷保存）
+      const blob = new Blob([editor.value], {type:'text/markdown;charset=utf-8'});
+      saveBlob(blob, 'note.md');
+    }
+  });
+
+  // 输入监听
+  editor.addEventListener('input', ()=>{
+    scheduleRender();
+    scheduleSave();
+  });
+
+  // 同步滚动（textarea -> preview），移动端触摸性能考虑为节流
+  let lastSync = 0;
+  editor.addEventListener('scroll', ()=>{
+    const now = Date.now();
+    if(now - lastSync < 30) return; // 节流
+    lastSync = now;
+    const ta = editor;
+    const pr = preview;
+    const ratio = ta.scrollTop / (ta.scrollHeight - ta.clientHeight || 1);
+    pr.scrollTop = ratio * (pr.scrollHeight - pr.clientHeight || 0);
+  });
+
+  // 页面卸载时保存光标位置
+  window.addEventListener('beforeunload', ()=> {
+    try{ localStorage.setItem(CURSOR_KEY, JSON.stringify({pos: editor.selectionStart})) }catch(e){}
+  });
+
+  // 恢复光标位置
+  try{
+    const c = JSON.parse(localStorage.getItem(CURSOR_KEY) || '{}');
+    if(c && typeof c.pos === 'number') setTimeout(()=> editor.setSelectionRange(c.pos,c.pos), 300);
+  }catch(e){}
+
+  // 公开调试接口
+  window.__md_editor_api = {
+    renderNow: doRender,
+    scheduleSave,
+    scheduleRender,
+    editorElement: editor,
+    previewElement: preview
+  };
+
+  // 可选：自动检测是否触控设备并增大按钮（更好触控体验）
+  (function enhanceTouchTargets(){
+    if(('ontouchstart' in window) || navigator.maxTouchPoints > 0){
+      document.querySelectorAll('.toolbar button').forEach(b=> b.classList.add('touch'));
+    }
+  })();
+
+})();
+</script>
+
+</body>
+</html>

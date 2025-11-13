@@ -240,14 +240,102 @@ body{
   border-radius: 50%;
   background: var(--panel);
   top: 3px;
-  left: calc(50% - 18px); /* 默认 auto */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  left: calc(50% - 16px);
   transition: left 0.35s cubic-bezier(0.25,0.8,0.25,1), background 0.3s;
   box-shadow: 0 0 12px rgba(255,200,50,0.5);
-  [data-theme="dark"] .theme-3way .thumb {
-  box-shadow: 0 0 12px rgba(100,150,255,0.6);
-  }
+}
 
+[data-theme="dark"] .theme-3way .thumb {
+  box-shadow: 0 0 12px rgba(100,150,255,0.6);
+}
+
+/* PC 端显示 / 手机端隐藏 */
+.pc-only { display: block; }
+.mobile-only { display: none; }
+
+@media(max-width:1000px){
+  .pc-only { display: none; }
+  .mobile-only {
+    display: flex;
+    gap: 6px;
+  }
+}
+
+/* ====== PC 端滑块 ====== */
+.theme-3way {
+  width: 125px;
+  height: 40px;
+  position: relative;
+  margin: 0 8px;
+}
+
+.theme-3way .track {
+  background: var(--toolbar-bg);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.theme-3way .opt {
+  position: relative;
+  z-index: 2;
+  font-size: 15px;
+  opacity: 0.7;
+  transition: opacity 0.25s, transform 0.25s;
+  user-select: none;
+}
+
+.theme-3way .opt.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.theme-3way .thumb {
+  position: absolute;
+  z-index: 1;
+  height: 33px;
+  width: 33px;
+  border-radius: 50%;
+  background: var(--panel);
+  top: 3px;
+  left: calc(50% - 16px);
+  transition: left 0.35s cubic-bezier(0.25,0.8,0.25,1), background 0.3s;
+  box-shadow: 0 0 12px rgba(255,200,50,0.5);
+}
+
+[data-theme="dark"] .theme-3way .thumb {
+  box-shadow: 0 0 12px rgba(100,150,255,0.6);
+}
+
+
+/* 手机端单按钮 */
+.theme-mobile-btn {
+  background: var(--toolbar-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background .25s, transform .2s;
+  color: var(--text);
+}
+
+.theme-mobile-btn:active {
+  transform: scale(0.9);
+}
+
+
+@media(max-width:1000px){
+  .pc-only { display: none; }
+  .mobile-only { display: inline-flex; }
 }
 
 </style>
@@ -258,17 +346,21 @@ body{
 <div class="app" id="app">
   <div class="header">
     <div class="brand">Markdown 编辑器</div>
-    <div class="note">离线/自动保存 · KaTeX / Mermaid / TOC</div>
+    <div class="note">离线</div>
     <div class="right">
-      <div id="status" class="note">已加载 · 本地自动保存</div>
-      <div class="theme-3way">
-  <div class="track">
-    <div class="thumb"></div>
-    <span class="opt opt-auto" data-value="auto">🖥</span>
-    <span class="opt opt-light" data-value="light">☀️</span>
-    <span class="opt opt-dark" data-value="dark">🌙</span>
-  </div>
-</div>
+      <div id="status" class="note">已加载 · 自动保存</div>
+      <div class="theme-3way pc-only">
+        <div class="track">
+          <div class="thumb"></div>
+          <span class="opt opt-auto" data-value="auto">🖥</span>
+          <span class="opt opt-light" data-value="light">☀️</span>
+          <span class="opt opt-dark" data-value="dark">🌙</span>
+        </div>
+      </div>
+
+      <!-- 移动端版（三按钮） -->
+<!-- 移动端单按钮（点击轮换 auto → light → dark） -->
+      <button class="theme-mobile-btn mobile-only" id="themeMobileBtn">🖥</button>
 
     </div>
   </div>
@@ -460,29 +552,65 @@ const positions = {
   dark: 'calc(100% - 36px)'
 };
 
-function update3wayUI(mode) {
+function updateThemeUI(mode){
+  // PC 三段开关
   opts.forEach(o => o.classList.remove('active'));
-  document.querySelector(`.opt-${mode}`).classList.add('active');
+  const pcActive = document.querySelector(`.opt-${mode}`);
+  if(pcActive) pcActive.classList.add('active');
   thumb.style.left = positions[mode];
+
+  // 手机按钮 UI 更新
+  const icons = { auto:"🖥", light:"☀️", dark:"🌙" };
+  themeMobileBtn.textContent = icons[mode];
 }
 
-// 点击交互
+
+function setTheme(mode){
+  localStorage.setItem(THEME_KEY, mode);
+  userTheme = mode;
+  applyTheme(mode);
+  updateThemeUI(mode);
+}
+
+/* PC */
 opts.forEach(o => {
   o.addEventListener('click', () => {
-    const mode = o.getAttribute('data-value');
-    localStorage.setItem(THEME_KEY, mode);
-    userTheme = mode;
-    applyTheme(mode);
-    update3wayUI(mode);
+    setTheme(o.dataset.value);
   });
 });
 
-// 页面加载时初始化三段开关
-update3wayUI(loadUserTheme());
 
-// 初始化
+/* 手机端单按钮：点击轮换 Auto → Light → Dark */
+const themeMobileBtn = document.getElementById("themeMobileBtn");
+
+function nextTheme(mode) {
+  if (mode === "auto") return "light";
+  if (mode === "light") return "dark";
+  return "auto";
+}
+
+themeMobileBtn.addEventListener("click", () => {
+  const newMode = nextTheme(userTheme);
+  setTheme(newMode);
+
+  // 更新按钮图标（🖥 ☀️ 🌙）
+  const icons = { auto: "🖥", light: "☀️", dark: "🌙" };
+  themeMobileBtn.textContent = icons[newMode];
+});
+
+// 初始化按钮图标
+const icons = { auto: "🖥", light: "☀️", dark: "🌙" };
+themeMobileBtn.textContent = icons[userTheme];
+
+/* 初始化 */
 let userTheme = loadUserTheme();
 applyTheme(userTheme);
+updateThemeUI(userTheme);
+
+/* 系统切换 */
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{
+  if(userTheme === 'auto') applyTheme('auto');
+});
 
 // 跟随系统（如果用户选择 auto）
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e=>{

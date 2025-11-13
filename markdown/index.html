@@ -436,6 +436,8 @@ body{
 /* ===============================
    初始化 markdown-it（完整版 + 插件）
    =============================== */
+const themeMobileBtn = document.getElementById("themeMobileBtn");
+let userTheme = loadUserTheme();
 const md = window.markdownit({
   html:true,
   linkify:true,
@@ -581,7 +583,7 @@ opts.forEach(o => {
 
 
 /* 手机端单按钮：点击轮换 Auto → Light → Dark */
-const themeMobileBtn = document.getElementById("themeMobileBtn");
+
 
 function nextTheme(mode) {
   if (mode === "auto") return "light";
@@ -603,7 +605,7 @@ const icons = { auto: "🖥", light: "☀️", dark: "🌙" };
 themeMobileBtn.textContent = icons[userTheme];
 
 /* 初始化 */
-let userTheme = loadUserTheme();
+
 applyTheme(userTheme);
 updateThemeUI(userTheme);
 

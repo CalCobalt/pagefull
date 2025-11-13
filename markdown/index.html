@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Markdown 编辑器</title>
+
+<!-- Styles from external libs (放到同目录) -->
+<link rel="stylesheet" href="highlight.css">
+<link rel="stylesheet" href="katex.min.css">
+
+<style>
+/* ====== 颜色系统（支持亮/暗模式 + 跟随系统） ====== */
+/* ====== 优雅的主题切换：全局淡入动画 ====== */
+html {
+  transition: background-color 0.35s ease,
+              color 0.35s ease,
+              filter 0.35s ease;
+}
+
+/* 整体淡入效果（可调节） */
+body {
+  transition: background-color 0.35s ease,
+              color 0.35s ease;
+}
+
+/* 所有面板、工具栏、编辑区共同淡变 */
+.panel, .toolbar, #editorPanel, #previewPanel, #editor, .mobile-tab {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+/* 暗色模式微微模糊，让切换像相机自动曝光 */
+[data-theme="dark"] body {
+  filter: brightness(94%) saturate(110%);
+}
+
+[data-theme="light"] body {
+  filter: brightness(100%) saturate(100%);
+}
+
+:root{
+  /* 浅色模式 */
+  --bg:#f6f7fb;
+  --panel:#ffffff;
+  --text:#0f1724;
+  --muted:#6b7280;
+  --border:#d0d4dd;
+  --editor-bg:#ffffff;
+  --toolbar-bg:#ffffff;
+  --btn-hover:rgba(0,0,0,0.07);
+  --code-bg:#f3f4f6;
+  --code-text:#111;
+}
+
+/* 深色模式变量 */
+[data-theme="dark"]{
+  --bg:#071122;
+  --panel:#0d1a33;
+  --text:#e6eef8;
+  --muted:#9aa7b7;
+  --border:#32425a;
+  --editor-bg:#0d1a33;
+  --toolbar-bg:#081226;
+  --btn-hover:rgba(255,255,255,0.08);
+  --code-bg:#111b2d;
+  --code-text:#e6eef8;
+}
+
+/* ====== 布局结构 ====== */
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:Inter,"PingFang SC","Microsoft Yahei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.app{max-width:1200px;margin:18px auto;padding:12px;}
+.header{display:flex;align-items:center;gap:12px;}
+.brand{font-weight:800;font-size:18px;}
+.header .right{
+  margin-left:auto;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+/* ====== 工具栏 ====== */
+.toolbar{
+  display:flex;gap:6px;flex-wrap:wrap;
+  background:var(--toolbar-bg);
+  padding:8px;
+  border-radius:10px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+  margin-top:12px;
+  border:1px solid var(--border);
+}
+.toolbar button{
+  border:0;
+  background:transparent;
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700;
+  color:var(--text);
+}
+.toolbar button:hover{
+  background:var(--btn-hover);
+}
+
+/* ====== 三列布局 ====== */
+.main{
+  display:grid;
+  grid-template-columns:260px 1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+.panel{
+  background:var(--panel);
+  border-radius:10px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.1);
+  padding:12px;
+  min-height:64vh;
+  overflow:auto;
+  border:1px solid var(--border);
+}
+
+/* ====== 编辑区 ====== */
+#editor{
+  width:100%;
+  height: calc(100vh - 160px); /* 自动填满屏幕 */
+  min-height: 60vh;            /* 防止过小 */
+  max-height: 100vh;
+  border:0;
+  outline:none;
+  padding:12px;
+  font-family:ui-monospace,monospace;
+  font-size:14px;
+  resize:vertical;
+  background:var(--editor-bg);
+  color:var(--text);
+}
+
+
+/* ====== 预览区样式 ====== */
+#preview{
+  padding:12px;
+}
+#preview pre{
+  background:var(--code-bg);
+  color:var(--code-text);
+  padding:10px 12px;
+  border-radius:8px;
+  overflow:auto;
+}
+#preview code{
+  background:var(--code-bg);
+  color:var(--code-text);
+  padding:3px 5px;
+  border-radius:5px;
+}
+
+/* ====== TOC ====== */
+.toc h3{margin:6px 0;}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+}
+.toc a:hover{
+  color:var(--accent);
+}
+
+/* ====== 手机模式 ====== */
+.mobile-tabs{display:none;}
+
+@media(max-width:1000px){
+  .main{grid-template-columns:1fr;}
+  #previewPanel{display:none;}
+  .mobile-tabs{display:flex;gap:8px;margin-top:8px;}
+}
+
+.mobile-tab{
+  flex:1;
+  padding:10px;
+  text-align:center;
+  border-radius:8px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  cursor:pointer;
+}
+.mobile-tab.active{
+  background:var(--bg);
+  box-shadow:0 6px 18px rgba(0,0,0,0.2);
+}
+.theme-3way {
+  width: 125px;
+  height: 40px;
+  position: relative;
+  margin: 0 8px;
+}
+
+.theme-3way .track {
+  background: var(--toolbar-bg);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.theme-3way .opt {
+  position: relative;
+  z-index: 2;
+  font-size: 15px;
+  opacity: 0.7;
+  transition: opacity 0.25s, transform 0.25s;
+  user-select: none;
+}
+
+.theme-3way .opt.active {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.theme-3way .thumb {
+  position: absolute;
+  z-index: 1;
+  height: 33px;
+  width: 33px;
+  border-radius: 50%;
+  background: var(--panel);
+  top: 3px;
+  left: calc(50% - 18px); /* 默认 auto */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  transition: left 0.35s cubic-bezier(0.25,0.8,0.25,1), background 0.3s;
+  box-shadow: 0 0 12px rgba(255,200,50,0.5);
+  [data-theme="dark"] .theme-3way .thumb {
+  box-shadow: 0 0 12px rgba(100,150,255,0.6);
+  }
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="header">
+    <div class="brand">Markdown 编辑器</div>
+    <div class="note">离线/自动保存 · KaTeX / Mermaid / TOC</div>
+    <div class="right">
+      <div id="status" class="note">已加载 · 本地自动保存</div>
+      <div class="theme-3way">
+  <div class="track">
+    <div class="thumb"></div>
+    <span class="opt opt-auto" data-value="auto">🖥</span>
+    <span class="opt opt-light" data-value="light">☀️</span>
+    <span class="opt opt-dark" data-value="dark">🌙</span>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+  <div class="toolbar" role="toolbar" aria-label="编辑工具栏">
+    <div class="controls">
+      <button data-action="bold" title="加粗（Ctrl/Cmd+B）"><strong>B</strong></button>
+      <button data-action="italic" title="斜体（Ctrl/Cmd+I）"><em>I</em></button>
+      <button data-action="h1" title="H1">H1</button>
+      <button data-action="h2" title="H2">H2</button>
+      <button data-action="code" title="代码块">{ }</button>
+      <button data-action="ul" title="无序列表">• 列表</button>
+      <button data-action="ol" title="有序列表">1.</button>
+      <button id="btnLink" title="插入链接">🔗</button>
+      <button id="btnImage" title="插入图片">🖼️</button>
+      <input id="fileImage" type="file" accept="image/*" style="display:none">
+    </div>
+
+    <div style="flex:1"></div>
+
+    <div class="controls">
+      <button id="btnOpen">打开</button>
+      <input id="fileOpen" type="file" accept=".md,text/markdown,text/plain" style="display:none">
+      <button id="btnSaveMd">导出 MD</button>
+      <button id="btnSaveHtml">导出 HTML</button>
+      <button id="btnToggleToc">TOC</button>
+    </div>
+  </div>
+
+  <div class="mobile-tabs" id="mobileTabs">
+    <div id="tabEdit" class="mobile-tab active">编辑</div>
+    <div id="tabPreview" class="mobile-tab">预览</div>
+  </div>
+
+  <div class="main">
+    <!-- TOC / 侧栏 -->
+    <div class="panel toc" id="tocPanel">
+      <h3>目录（TOC） <button id="tocCollapseBtn" title="折叠/展开">▾</button></h3>
+      <div id="tocContent">（无标题）</div>
+      <hr>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px">
+        快捷：<span class="kbd">Ctrl/Cmd+B</span> <span class="kbd">Ctrl/Cmd+S</span>
+      </div>
+    </div>
+
+    <!-- 编辑区 -->
+    <div class="panel" id="editorPanel">
+      <textarea id="editor" spellcheck="false" aria-label="Markdown 编辑区"></textarea>
+    </div>
+
+    <!-- 预览区 -->
+    <div class="panel" id="previewPanel">
+      <div id="preview" class="preview" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Libraries (放到同目录) -->
+<script src="markdown-it.min.js"></script>
+<script src="markdown-it-emoji.min.js"></script>
+<script src="markdown-it-footnote.min.js"></script>
+<script src="markdown-it-sub.min.js"></script>
+<script src="markdown-it-sup.min.js"></script>
+<script src="markdown-it-mark.min.js"></script>
+<script src="markdown-it-container.min.js"></script>
+<script src="markdown-it-task-lists.min.js"></script>
+
+<script src="highlight.min.js"></script>
+<script src="katex.min.js"></script>
+<script src="mermaid.min.js"></script>
+
+<script>
+/* ===============================
+   初始化 markdown-it（完整版 + 插件）
+   =============================== */
+const md = window.markdownit({
+  html:true,
+  linkify:true,
+  typographer:true,
+  highlight: function(code, lang){
+    try{
+      if(lang && hljs.getLanguage(lang)) return hljs.highlight(code, {language:lang}).value;
+      return hljs.highlightAuto(code).value;
+    }catch(e){
+      return md.utils.escapeHtml(code);
+    }
+  }
+})
+.use(window.markdownitEmoji)
+.use(window.markdownitSub)
+.use(window.markdownitSup)
+.use(window.markdownitMark)
+.use(window.markdownitContainer, 'info')
+.use(window.markdownitFootnote)
+.use(window.markdownitTaskLists, {label:true});
+
+/* ===============================
+   常量与元素
+   =============================== */
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+const status = document.getElementById('status');
+const STORAGE_KEY = 'md-editor:content:v2';
+const THEME_KEY = 'md-editor:theme';
+const TOC_COLLAPSED = 'md-editor:toc:collapsed';
+
+/* ===============================
+   初始内容（示例）
+   =============================== */
+const DEFAULT = `# 欢迎使用
+
+这是一个**离线、单文件**的 Markdown 编辑器示例。功能包括：
+
+- 完整 markdown-it 支持（表格、任务列表、脚注等）
+- KaTeX 行内与块级公式
+- highlight.js 代码高亮（仅对可见代码高亮，节省资源）
+- 图片拖拽 / 粘贴 / 选择 → 自动转 base64
+- 本地自动保存、导入/导出
+- 移动端：编辑/预览切换、软键盘优化、触控友好按钮
+
+## 示例 Mermaid
+
+\`\`\`mermaid
+graph TD
+  A[开始] --> B{判断}
+  B -->|是| C[操作1]
+  B -->|否| D[操作2]
+\`\`\`
+
+数学示例：
+
+行内：$\\frac{1}{x}$，块级：
+
+$$
+\\int_0^1 x^2 dx
+$$
+`;
+
+/* ===============================
+   加载初始文本
+   =============================== */
+try{
+  editor.value = localStorage.getItem(STORAGE_KEY) || DEFAULT;
+}catch(e){
+  editor.value = DEFAULT;
+}
+
+/* ===============================
+   主题（深色/浅色）
+   =============================== */
+function loadUserTheme(){
+  try{ return localStorage.getItem(THEME_KEY) || 'auto'; }
+  catch(e){ return 'auto'; }
+}
+
+// 应用主题
+function applyTheme(mode) {
+  // 加上动画 class
+  document.body.classList.add('theme-transition');
+
+  // 用两层 requestAnimationFrame 让浏览器排版后再执行主题变化
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (mode === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else if (mode === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        // auto = 跟随系统
+        const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (sysDark) document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+      }
+    });
+  });
+
+  // 延迟移除动画 class（动画结束）
+  setTimeout(() => {
+    document.body.classList.remove('theme-transition');
+  }, 350); // 要和 CSS 里的 transition 时间匹配
+
+}
+const opts = document.querySelectorAll('.theme-3way .opt');
+const thumb = document.querySelector('.theme-3way .thumb');
+
+const positions = {
+  auto: '4px',
+  light: 'calc(50% - 16px)',
+  dark: 'calc(100% - 36px)'
+};
+
+function update3wayUI(mode) {
+  opts.forEach(o => o.classList.remove('active'));
+  document.querySelector(`.opt-${mode}`).classList.add('active');
+  thumb.style.left = positions[mode];
+}
+
+// 点击交互
+opts.forEach(o => {
+  o.addEventListener('click', () => {
+    const mode = o.getAttribute('data-value');
+    localStorage.setItem(THEME_KEY, mode);
+    userTheme = mode;
+    applyTheme(mode);
+    update3wayUI(mode);
+  });
+});
+
+// 页面加载时初始化三段开关
+update3wayUI(loadUserTheme());
+
+// 初始化
+let userTheme = loadUserTheme();
+applyTheme(userTheme);
+
+// 跟随系统（如果用户选择 auto）
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e=>{
+  if(userTheme === 'auto'){
+    applyTheme('auto');
+  }
+});
+
+
+/* ===============================
+   工具栏操作（插入语法）
+   =============================== */
+function wrapSelection(prefix, suffix = prefix){
+  const el = editor;
+  const start = el.selectionStart, end = el.selectionEnd;
+  const sel = el.value.slice(start, end) || '';
+  el.setRangeText(prefix + sel + suffix, start, end, 'end');
+  el.focus();
+  scheduleRender();
+  scheduleSave();
+}
+document.querySelectorAll('[data-action]').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const act = btn.getAttribute('data-action');
+    if(act === 'bold') wrapSelection('**','**');
+    else if(act === 'italic') wrapSelection('*','*');
+    else if(act === 'h1') wrapSelection('\n# ','\n');
+    else if(act === 'h2') wrapSelection('\n## ','\n');
+    else if(act === 'code') wrapSelection('\n```\n','\n```\n');
+    else if(act === 'ul') wrapSelection('\n- ','\n');
+    else if(act === 'ol') wrapSelection('\n1. ','\n');
+  });
+});
+document.getElementById('btnLink').addEventListener('click', ()=>{
+  const url = prompt('输入链接 URL：','https://');
+  if(url) wrapSelection('[','](' + url + ')');
+});
+
+/* ===============================
+   图片：选择 / 拖拽 / 粘贴（转 base64）
+   =============================== */
+document.getElementById('btnImage').addEventListener('click', ()=> document.getElementById('fileImage').click());
+document.getElementById('fileImage').addEventListener('change', async e=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const data = await readFileAsDataURL(f);
+  const pos = editor.selectionStart || editor.value.length;
+  const mdImg = `![${f.name}](${data})\n`;
+  editor.setRangeText(mdImg, pos, pos, 'end');
+  scheduleRender(); scheduleSave();
+});
+editor.addEventListener('drop', async e=>{
+  e.preventDefault();
+  const files = Array.from(e.dataTransfer.files || []);
+  for(const f of files){
+    if(f.type.startsWith('image/')){
+      const data = await readFileAsDataURL(f);
+      const pos = editor.selectionStart || editor.value.length;
+      editor.setRangeText(`![${f.name}](${data})\n`, pos, pos, 'end');
+    } else if(f.name.endsWith('.md')){
+      const text = await f.text(); editor.value = text; scheduleRender(); scheduleSave();
+    }
+  }
+});
+editor.addEventListener('paste', async e=>{
+  const items = e.clipboardData && e.clipboardData.items;
+  if(!items) return;
+  for(const it of items){
+    if(it.type && it.type.startsWith('image/')){
+      const f = it.getAsFile();
+      const data = await readFileAsDataURL(f);
+      const pos = editor.selectionStart || editor.value.length;
+      editor.setRangeText(`![pasted-image](${data})\n`, pos, pos, 'end');
+      scheduleRender(); scheduleSave();
+      e.preventDefault();
+    }
+  }
+});
+function readFileAsDataURL(file){
+  return new Promise((res,rej)=>{
+    const fr = new FileReader();
+    fr.onload = ()=> res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(file);
+  });
+}
+
+/* ===============================
+   导入 / 导出
+   =============================== */
+document.getElementById('btnOpen').addEventListener('click', ()=> document.getElementById('fileOpen').click());
+document.getElementById('fileOpen').addEventListener('change', async e=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const text = await f.text(); editor.value = text; scheduleRender(0); scheduleSave(0);
+});
+document.getElementById('btnSaveMd').addEventListener('click', ()=>{
+  const blob = new Blob([editor.value], {type:'text/markdown;charset=utf-8'});
+  const name = (prompt('文件名（带 .md）：','note.md')||'note.md').replace(/[\\\/:*?"<>|]/g,'_');
+  saveBlob(blob, name);
+});
+document.getElementById('btnSaveHtml').addEventListener('click', ()=>{
+  const html = renderToFullHtml(editor.value);
+  saveBlob(new Blob([html], {type:'text/html;charset=utf-8'}), 'export.html');
+});
+function saveBlob(blob, name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 600);
+}
+function renderToFullHtml(mdSrc){
+  let html = md.render(mdSrc);
+  html = renderMathInHtml(html);
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="katex.min.css"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Microsoft Yahei";padding:24px}</style></head><body>${html}</body></html>`;
+}
+
+/* ===============================
+   自动保存（localStorage）
+   =============================== */
+let saveTimer = null;
+function scheduleSave(delay=1000){
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{
+    try{ localStorage.setItem(STORAGE_KEY, editor.value); status.textContent = new Date().toLocaleTimeString()+' 已保存（本地）'; }catch(e){ status.textContent = '保存失败'; }
+    saveTimer = null;
+  }, delay);
+}
+
+/* ===============================
+   渲染：md -> html -> math -> mermaid -> highlight -> toc
+   =============================== */
+let renderTimer = null;
+function scheduleRender(immediateDelay){
+  if(renderTimer) clearTimeout(renderTimer);
+  const delay = (immediateDelay !== undefined) ? immediateDelay : 150;
+  renderTimer = setTimeout(()=>{ doRender(); renderTimer = null; }, delay);
+}
+function doRender(){
+  let src = editor.value;
+  // 1. md -> html
+  let html = md.render(src);
+  // 2. Math (KaTeX) -- replace $$...$$ and $...$
+  html = renderMathInHtml(html);
+  // 3. transform mermaid codeblocks to div.mermaid
+  html = convertMermaidCodeblock(html);
+  preview.innerHTML = html;
+  // 4. highlight code blocks
+  preview.querySelectorAll('pre code').forEach(block=>{
+    try{ hljs.highlightBlock(block); }catch(e){}
+  });
+  // 5. init mermaid
+  try{
+    // mermaid init on elements with class 'language-mermaid' or div.mermaid
+    const merElems = preview.querySelectorAll('.mermaid');
+    merElems.forEach(node => {
+      // mermaid can render from innerText
+      // use mermaid.parse/render if available; mermaid.init will process .mermaid blocks
+    });
+    if(window.mermaid && typeof mermaid.init === 'function') mermaid.init(undefined, preview.querySelectorAll('.mermaid'));
+  }catch(e){}
+  // 6. build TOC
+  buildTOC();
+}
+
+function renderMathInHtml(html){
+  // block math $$...$$
+  html = html.replace(/\$\$([\s\S]+?)\$\$/g, function(m,tex){
+    try{
+      const span = document.createElement('span');
+      katex.render(tex, span, {displayMode:true, throwOnError:false});
+      return span.outerHTML;
+    }catch(e){ return `<pre>${escapeHtml(tex)}</pre>`; }
+  });
+  // inline $...$
+  html = html.replace(/\$([^$]+?)\$/g, function(m,tex){
+    try{
+      const span = document.createElement('span');
+      katex.render(tex, span, {displayMode:false, throwOnError:false});
+      return span.outerHTML;
+    }catch(e){ return `<code>${escapeHtml(tex)}</code>`; }
+  });
+  return html;
+}
+
+function convertMermaidCodeblock(html){
+  // 找到被 markdown-it 渲染为 <pre><code class="language-mermaid">...</code></pre>
+  // 把它替换为 <div class="mermaid">...</div>
+  return html.replace(/<pre><code[^>]*class="[^"]*language-mermaid[^"]*"[^>]*>([\s\S]*?)<\/code><\/pre>/g, function(_, body){
+    const text = body.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+    return `<div class="mermaid">${text}</div>`;
+  });
+}
+
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ===============================
+   TOC 生成（可折叠）
+   =============================== */
+const tocContent = document.getElementById('tocContent');
+const tocPanel = document.getElementById('tocPanel');
+const tocCollapseBtn = document.getElementById('tocCollapseBtn');
+let tocIsCollapsed = (localStorage.getItem(TOC_COLLAPSED) === '1');
+function buildTOC(){
+  const headers = preview.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  if(!headers.length){ tocContent.innerHTML = '<div class="note">（无标题）</div>'; return; }
+  const ul = document.createElement('ul');
+  headers.forEach(h=>{
+    const text = h.textContent;
+    const id = text.trim().toLowerCase().replace(/[^\w]+/g,'-').replace(/^-|-$/g,'');
+    h.id = id;
+    const li = document.createElement('li');
+    li.style.marginLeft = (parseInt(h.tagName.substring(1))-1)*8 + 'px';
+    const a = document.createElement('a'); a.href = '#'+id; a.textContent = text;
+    a.addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById(id).scrollIntoView({behavior:'smooth', block:'center'}); if(window.matchMedia && window.matchMedia('(max-width:1000px)').matches){ /* show preview */ document.getElementById('previewPanel').style.display='block'; document.getElementById('editorPanel').style.display='none'; } });
+    li.appendChild(a); ul.appendChild(li);
+  });
+  tocContent.innerHTML = ''; tocContent.appendChild(ul);
+  // apply collapse state
+  if(tocIsCollapsed) { tocContent.style.display='none'; tocCollapseBtn.textContent='▸'; } else { tocContent.style.display='block'; tocCollapseBtn.textContent='▾'; }
+}
+tocCollapseBtn.addEventListener('click', ()=>{ tocIsCollapsed = !tocIsCollapsed; localStorage.setItem(TOC_COLLAPSED, tocIsCollapsed ? '1':'0'); buildTOC(); });
+
+document.getElementById('btnToggleToc').addEventListener('click', ()=>{
+  const cur = tocPanel.style.display === 'none' ? '' : 'none';
+  tocPanel.style.display = cur;
+});
+
+/* ===============================
+   事件：快捷键 / 同步滚动 / 移动端切换
+   =============================== */
+document.addEventListener('keydown', e=>{
+  const mod = e.ctrlKey || e.metaKey;
+  if(mod && e.key.toLowerCase() === 'b'){ e.preventDefault(); wrapSelection('**','**'); }
+  if(mod && e.key.toLowerCase() === 'i'){ e.preventDefault(); wrapSelection('*','*'); }
+  if(mod && e.key.toLowerCase() === 's'){ e.preventDefault(); const blob=new Blob([editor.value], {type:'text/markdown;charset=utf-8'}); saveBlob(blob,'note.md'); }
+});
+
+editor.addEventListener('input', ()=>{
+  scheduleRender();
+  scheduleSave();
+});
+editor.addEventListener('scroll', ()=>{
+  const ta = editor, pr = preview;
+  const ratio = ta.scrollTop / (ta.scrollHeight - ta.clientHeight || 1);
+  pr.scrollTop = ratio * (pr.scrollHeight - pr.clientHeight || 0);
+});
+
+/* 移动端 编辑/预览 切换 */
+document.getElementById('tabEdit').addEventListener('click', ()=>{
+  document.getElementById('editorPanel').style.display='block';
+  document.getElementById('previewPanel').style.display='none';
+  document.getElementById('tabEdit').classList.add('active');
+  document.getElementById('tabPreview').classList.remove('active');
+});
+document.getElementById('tabPreview').addEventListener('click', ()=>{
+  document.getElementById('editorPanel').style.display='none';
+  document.getElementById('previewPanel').style.display='block';
+  document.getElementById('tabPreview').classList.add('active');
+  document.getElementById('tabEdit').classList.remove('active');
+});
+
+/* ===============================
+   初次渲染与恢复
+   =============================== */
+scheduleRender(0);
+try{
+  if(localStorage.getItem(TOC_COLLAPSED) === '1') tocIsCollapsed = true;
+}catch(e){}
+buildTOC();
+try{ localStorage.setItem('md-editor:last-open', new Date().toISOString()); }catch(e){}
+
+/* ===============================
+   公开/工具函数
+   =============================== */
+function scheduleRenderNow(){ scheduleRender(0); }
+window.__md_editor = { scheduleRender: scheduleRenderNow, editorElement: editor, previewElement: preview };
+
+/* ===============================
+   Helper: export render+math used when saving HTML
+   =============================== */
+function renderMathOnString(html){
+  // used by renderToFullHtml
+  return renderMathInHtml(html);
+}
+</script>
+</body>
+</html>

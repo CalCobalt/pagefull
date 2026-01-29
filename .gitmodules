@@ -1,3 +1,6 @@
 [submodule "assets/lib"]
 	path = assets/lib
 	url = https://github.com/cotes2020/chirpy-static-assets.git
+[submodule "live2d"]
+	path = live2d
+	url = https://github.com/CalCobalt/live2d-widget.git

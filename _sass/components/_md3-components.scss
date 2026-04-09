@@ -1,0 +1,142 @@
+/* Material Design 3 Component Styles */
+
+/* MD3 Buttons */
+md-filled-button,
+md-outlined-button,
+md-text-button {
+  font-family: inherit;
+  --md-sys-color-primary: var(--md3-primary);
+  --md-sys-color-on-primary: var(--md3-on-primary);
+  --md-sys-color-secondary: var(--md3-secondary);
+  --md-sys-color-on-secondary: var(--md3-on-secondary);
+}
+
+/* MD3 Text Fields */
+md-outlined-text-field,
+md-filled-text-field {
+  font-family: inherit;
+  width: 100%;
+  --md-sys-color-primary: var(--md3-primary);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 Chips */
+md-chip-set {
+  --md-sys-color-primary: var(--md3-primary);
+}
+
+md-filter-chip,
+md-input-chip,
+md-suggestion-chip,
+md-assist-chip {
+  --md-sys-color-primary: var(--md3-primary);
+  --md-sys-color-secondary: var(--md3-secondary);
+}
+
+/* MD3 Cards */
+md-card {
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+}
+
+/* MD3 Dialog */
+md-dialog {
+  --md-sys-color-surface: var(--md3-surface);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 List */
+md-list,
+md-list-item {
+  --md-sys-color-surface: var(--md3-surface);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 Icon Button */
+md-icon-button,
+md-filled-icon-button,
+md-outlined-icon-button {
+  --md-sys-color-primary: var(--md3-primary);
+  --md-sys-color-on-primary: var(--md3-on-primary);
+}
+
+/* MD3 Progress */
+md-linear-progress,
+md-circular-progress {
+  --md-sys-color-primary: var(--md3-primary);
+}
+
+/* MD3 Checkbox */
+md-checkbox {
+  --md-sys-color-primary: var(--md3-primary);
+}
+
+/* MD3 Radio */
+md-radio {
+  --md-sys-color-primary: var(--md3-primary);
+}
+
+/* MD3 Menu */
+md-menu {
+  --md-sys-color-surface: var(--md3-surface);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 Navigation Bar */
+md-navigation-bar {
+  --md-sys-color-surface: var(--md3-surface);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 Navigation Drawer */
+md-navigation-drawer {
+  --md-sys-color-surface: var(--md3-surface);
+  --md-sys-color-on-surface: var(--md3-on-surface);
+}
+
+/* MD3 Tab Bar */
+md-tabs {
+  --md-sys-color-primary: var(--md3-primary);
+  --md-sys-color-surface: var(--md3-surface);
+}
+
+/* MD3 Snackbar */
+md-snackbar {
+  --md-sys-color-inverse-surface: #313033;
+  --md-sys-color-inverse-on-surface: #f5eff7;
+}
+
+/* Utility Classes for MD3 Colors */
+.md3-primary {
+  color: var(--md3-primary);
+}
+
+.md3-primary-bg {
+  background-color: var(--md3-primary);
+}
+
+.md3-secondary {
+  color: var(--md3-secondary);
+}
+
+.md3-secondary-bg {
+  background-color: var(--md3-secondary);
+}
+
+.md3-tertiary {
+  color: var(--md3-tertiary);
+}
+
+.md3-tertiary-bg {
+  background-color: var(--md3-tertiary);
+}
+
+.md3-surface {
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+}
+
+.md3-primary-container {
+  background-color: var(--md3-primary-container);
+  color: var(--md3-on-primary-container);
+}

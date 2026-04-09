@@ -1,0 +1,252 @@
+/* MD3 Post Card Styles */
+
+%md3-post-card {
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+}
+
+.post-preview {
+  @extend %md3-post-card;
+  padding: 16px;
+  margin-bottom: 16px;
+
+  .post-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--md3-on-surface);
+    margin-bottom: 8px;
+    text-decoration: none;
+    display: block;
+
+    &:hover {
+      color: var(--md3-primary);
+    }
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 12px;
+    margin: 12px 0;
+    font-size: 12px;
+    color: var(--md3-on-surface-variant);
+
+    .post-date {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .post-category,
+    .post-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+
+      a {
+        color: var(--md3-primary);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  .post-excerpt {
+    font-size: 14px;
+    color: var(--md3-on-surface-variant);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+}
+
+/* MD3 Archive/Category List */
+.archive-list,
+.category-list {
+  .archive-item,
+  .category-item {
+    @extend %md3-post-card;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+
+    .archive-title,
+    .category-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--md3-on-surface);
+    }
+
+    .archive-count,
+    .category-count {
+      background-color: var(--md3-primary-container);
+      color: var(--md3-on-primary-container);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+/* MD3 Tags */
+.tags-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: var(--md3-secondary-container);
+    color: var(--md3-on-secondary-container);
+    border-radius: 20px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background-color: var(--md3-primary-container);
+      color: var(--md3-on-primary-container);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* MD3 Pagination */
+.pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 24px 0;
+
+  .page-item {
+    a,
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-decoration: none;
+      color: var(--md3-on-surface);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    a {
+      background-color: var(--md3-surface-variant);
+      color: var(--md3-on-surface-variant);
+
+      &:hover {
+        background-color: var(--md3-primary);
+        color: var(--md3-on-primary);
+      }
+    }
+
+    &.active span {
+      background-color: var(--md3-primary);
+      color: var(--md3-on-primary);
+    }
+
+    &.disabled span {
+      color: var(--md3-outline);
+    }
+  }
+}
+
+/* MD3 Breadcrumb */
+.breadcrumb {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 16px;
+
+  .breadcrumb-item {
+    color: var(--md3-on-surface-variant);
+
+    a {
+      color: var(--md3-primary);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.active {
+      color: var(--md3-on-surface);
+    }
+
+    &::before {
+      content: '/';
+      margin: 0 4px;
+    }
+
+    &:first-child::before {
+      content: '';
+      margin: 0;
+    }
+  }
+}
+
+/* MD3 TOC (Table of Contents) */
+.toc {
+  background-color: var(--md3-surface-variant);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+
+  .toc-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md3-on-surface);
+    margin-bottom: 12px;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 6px 0 6px 16px;
+      border-left: 2px solid transparent;
+      color: var(--md3-on-surface-variant);
+      font-size: 13px;
+
+      &:hover {
+        border-left-color: var(--md3-primary);
+        color: var(--md3-primary);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    ol,
+    ul {
+      margin-left: 0;
+    }
+  }
+}

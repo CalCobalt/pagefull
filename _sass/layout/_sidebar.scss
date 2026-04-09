@@ -197,13 +197,12 @@ $sidebar-display: 'sidebar-display'; /* the attribute for sidebar display */
       display: flex;
       align-items: center;
       justify-content: center;
-
-      &:not(:focus-visible) {
-        box-shadow: var(--sidebar-border-color) 0 0 0 1px;
-      }
+      border: 1.5px solid var(--sidebar-border-color);
+      transition: all 0.2s ease;
 
       &:hover {
         background-color: var(--sidebar-hover-bg);
+        border-color: var(--sidebar-btn-color);
       }
     }
 
@@ -229,6 +228,11 @@ $sidebar-display: 'sidebar-display'; /* the attribute for sidebar display */
       @extend %button;
       @extend %sidebar-links;
       @extend %sidebar-link-hover;
+      
+      // Make it a perfect circle by ensuring width equals height
+      width: $btn-size;
+      height: $btn-size;
+      padding: 0; // Override Bootstrap padding
     }
 
     .icon-border {

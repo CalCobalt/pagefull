@@ -1,29 +1,29 @@
 @mixin styles {
   color-scheme: dark;
 
-  /* Framework color */
-  --main-bg: rgb(27, 27, 30);
-  --mask-bg: rgb(68, 69, 70);
-  --main-border-color: rgb(44, 45, 45);
+  /* Framework color - MD3 Colors */
+  --main-bg: var(--md3-surface, rgb(27, 27, 30));
+  --mask-bg: var(--md3-outline, rgb(68, 69, 70));
+  --main-border-color: var(--md3-primary, rgb(44, 45, 45));
 
-  /* Common color */
-  --text-color: rgb(175, 176, 177);
-  --text-muted-color: #868686;
-  --text-muted-highlight-color: #aeaeae;
-  --heading-color: #cccccc;
-  --label-color: #a7a7a7;
-  --blockquote-border-color: rgb(66, 66, 66);
-  --blockquote-text-color: #868686;
-  --link-color: rgb(138, 180, 248);
-  --link-underline-color: rgb(82, 108, 150);
-  --button-bg: #1e1e1e;
-  --btn-border-color: #2e2f31;
+  /* Common color - MD3 Colors */
+  --text-color: var(--md3-on-surface, rgb(175, 176, 177));
+  --text-muted-color: var(--md3-outline, #868686);
+  --text-muted-highlight-color: var(--md3-on-surface, #aeaeae);
+  --heading-color: var(--md3-on-surface, #cccccc);
+  --label-color: var(--md3-outline, #a7a7a7);
+  --blockquote-border-color: var(--md3-primary-container, rgb(66, 66, 66));
+  --blockquote-text-color: var(--md3-outline, #868686);
+  --link-color: var(--md3-primary, rgb(138, 180, 248));
+  --link-underline-color: var(--md3-primary-container, rgb(82, 108, 150));
+  --button-bg: var(--md3-surface, #1e1e1e);
+  --btn-border-color: var(--md3-primary, #2e2f31);
   --btn-backtotop-color: var(--text-color);
-  --btn-backtotop-border-color: #212122;
-  --card-header-bg: #292929;
-  --checkbox-color: rgb(118, 120, 121);
+  --btn-backtotop-border-color: var(--md3-primary-container, #212122);
+  --card-header-bg: var(--md3-primary-container, #292929);
+  --checkbox-color: var(--md3-outline, rgb(118, 120, 121));
   --checkbox-checked-color: var(--link-color);
-  --img-bg: radial-gradient(circle, rgb(22, 22, 24) 0%, rgb(32, 32, 32) 100%);
+  --img-bg: radial-gradient(circle, var(--md3-surface, rgb(22, 22, 24)) 0%, var(--md3-primary-container, rgb(32, 32, 32)) 100%);
   --shimmer-bg: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
@@ -31,23 +31,23 @@
     rgba(255, 255, 255, 0) 100%
   );
 
-  /* Sidebar */
-  --site-title-color: #717070;
-  --site-subtitle-color: #868686;
-  --sidebar-bg: #1e1e1e;
-  --sidebar-border-color: #292929;
-  --sidebar-muted-color: #868686;
-  --sidebar-active-color: rgb(255, 255, 255, 0.95);
-  --sidebar-hover-bg: #262626;
-  --sidebar-btn-bg: #232328;
-  --sidebar-btn-color: #787878;
-  --avatar-border-color: rgb(206, 206, 206, 0.9);
+  /* Sidebar - MD3 Colors */
+  --site-title-color: var(--md3-outline, #717070);
+  --site-subtitle-color: var(--md3-outline, #868686);
+  --sidebar-bg: var(--md3-surface, #1e1e1e);
+  --sidebar-border-color: var(--md3-outline, #a89fb0);
+  --sidebar-muted-color: var(--md3-outline, #868686);
+  --sidebar-active-color: var(--md3-on-surface, rgb(255, 255, 255, 0.95));
+  --sidebar-hover-bg: rgba(227, 176, 201, 0.15);
+  --sidebar-btn-bg: var(--md3-primary-container, #4a2d47);
+  --sidebar-btn-color: var(--md3-on-primary-container, #f0d9e8);
+  --avatar-border-color: rgba(206, 206, 206, 0.9);
 
-  /* Topbar */
-  --topbar-bg: rgb(27, 27, 30, 0.64);
+  /* Topbar - MD3 Colors */
+  --topbar-bg: rgba(27, 27, 30, 0.64);
   --topbar-text-color: var(--text-color);
-  --search-border-color: rgb(55, 55, 55);
-  --search-icon-color: rgb(100, 102, 105);
+  --search-border-color: var(--md3-primary, rgb(55, 55, 55));
+  --search-icon-color: var(--md3-outline, rgb(100, 102, 105));
   --input-focus-border-color: rgb(112, 114, 115);
 
   /* Home page */

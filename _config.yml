@@ -9,17 +9,17 @@ theme: jekyll-theme-chirpy
 lang: zh-CN
 
 # Change to your timezone › https://kevinnovak.github.io/Time-Zone-Picker
-timezone:
+timezone: Asia/Shanghai
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
 title: CalCobalt # the main title
 
-tagline: "EvilSoCute" # it will display as the subtitle
+tagline: "<*O*>" # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  CalCobalt的神秘大爷点。
+  诶呀我不知道写什么就随便写
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -41,8 +41,8 @@ social:
     - https://twitter.com/CalCobalt # change to your Twitter homepage
     - https://github.com/CalCobalt # change to your GitHub homepage
     # Uncomment below to add more social links
-    # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://space.bilibili.com/3461564757707456
+    - https://space.bilibili.com/379515135
 
 # Site Verification Settings
 webmaster_verifications:
@@ -98,7 +98,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: "./files/avatar/evil.png"
+avatar: "./files/avatar/donkomon.jpg"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.

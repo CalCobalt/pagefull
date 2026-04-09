@@ -59,6 +59,13 @@
           text-decoration: underline;
         }
       }
+
+      /* Override Bootstrap button hover color for MD3 */
+      .btn-outline-primary:hover {
+        --bs-btn-hover-bg: var(--md3-primary);
+        --bs-btn-hover-border-color: var(--md3-primary);
+        color: var(--md3-on-primary) !important;
+      }
     }
   }
 

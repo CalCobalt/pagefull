@@ -1,0 +1,480 @@
+/* Material Design 3 Layout */
+
+// MD3 Spacing System
+$md3-spacing-xs: 4px;
+$md3-spacing-sm: 8px;
+$md3-spacing-md: 12px;
+$md3-spacing-lg: 16px;
+$md3-spacing-xl: 24px;
+$md3-spacing-xxl: 32px;
+
+// MD3 Elevation/Shadow
+$md3-elevation-0: none;
+$md3-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
+$md3-elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.12);
+$md3-elevation-3: 0 4px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.12);
+$md3-elevation-4: 0 6px 12px rgba(0, 0, 0, 0.3), 0 6px 16px rgba(0, 0, 0, 0.12);
+$md3-elevation-5: 0 8px 16px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.12);
+
+// MD3 Border Radius
+$md3-radius-xs: 4px;
+$md3-radius-sm: 8px;
+$md3-radius-md: 12px;
+$md3-radius-lg: 16px;
+$md3-radius-xl: 28px;
+
+/* ========== Container & Grid ========== */
+.md3-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $md3-spacing-xl;
+}
+
+/* ========== Cards ========== */
+.md3-card {
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+  border-radius: $md3-radius-md;
+  box-shadow: $md3-elevation-1;
+  padding: $md3-spacing-lg;
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: $md3-elevation-2;
+  }
+
+  &.md3-card-elevated {
+    box-shadow: $md3-elevation-1;
+
+    &:hover {
+      box-shadow: $md3-elevation-2;
+    }
+  }
+
+  &.md3-card-outlined {
+    box-shadow: none;
+    border: 1px solid var(--md3-outline);
+  }
+
+  /* Card sections */
+  .md3-card-header {
+    padding: $md3-spacing-lg;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    margin: (-$md3-spacing-lg) (-$md3-spacing-lg) $md3-spacing-lg (-$md3-spacing-lg);
+  }
+
+  .md3-card-content {
+    padding: $md3-spacing-lg 0;
+  }
+
+  .md3-card-actions {
+    display: flex;
+    gap: $md3-spacing-md;
+    padding: $md3-spacing-lg;
+    margin: $md3-spacing-lg (-$md3-spacing-lg) (-$md3-spacing-lg) (-$md3-spacing-lg);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* ========== Buttons ========== */
+.md3-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $md3-spacing-sm;
+  padding: $md3-spacing-md $md3-spacing-lg;
+  border: none;
+  border-radius: $md3-radius-lg;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  /* Filled Button */
+  &.md3-button-filled {
+    background-color: var(--md3-primary);
+    color: var(--md3-on-primary);
+
+    &:hover {
+      box-shadow: $md3-elevation-1;
+    }
+  }
+
+  /* Outlined Button */
+  &.md3-button-outlined {
+    background-color: transparent;
+    color: var(--md3-primary);
+    border: 1px solid var(--md3-outline);
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--md3-primary) 12%, transparent);
+    }
+  }
+
+  /* Text Button */
+  &.md3-button-text {
+    background-color: transparent;
+    color: var(--md3-primary);
+    padding: $md3-spacing-md;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--md3-primary) 12%, transparent);
+    }
+  }
+
+  /* Tonal Button */
+  &.md3-button-tonal {
+    background-color: var(--md3-secondary-container);
+    color: var(--md3-on-secondary-container);
+
+    &:hover {
+      box-shadow: $md3-elevation-1;
+    }
+  }
+}
+
+/* ========== Navigation Drawer (Sidebar) ========== */
+.md3-navigation-drawer {
+  width: 256px;
+  height: 100vh;
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .md3-drawer-header {
+    padding: $md3-spacing-xl;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .md3-drawer-content {
+    flex: 1;
+    padding: $md3-spacing-md 0;
+  }
+
+  .md3-drawer-item {
+    display: flex;
+    align-items: center;
+    gap: $md3-spacing-md;
+    padding: $md3-spacing-md $md3-spacing-lg;
+    margin: $md3-spacing-xs $md3-spacing-md;
+    border-radius: $md3-radius-lg;
+    color: var(--md3-on-surface-variant);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background-color: rgba(200, 100, 150, 0.08);
+      color: var(--md3-on-surface);
+    }
+
+    &.active {
+      background-color: var(--md3-primary-container);
+      color: var(--md3-on-primary-container);
+    }
+  }
+
+  .md3-drawer-footer {
+    padding: $md3-spacing-xl;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* ========== Top App Bar ========== */
+.md3-topbar {
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+  padding: $md3-spacing-md $md3-spacing-lg;
+  border-bottom: 1px solid var(--md3-outline);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $md3-spacing-lg;
+
+  .md3-topbar-title {
+    font-size: 28px;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .md3-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: $md3-spacing-md;
+  }
+}
+
+/* ========== Text Fields ========== */
+.md3-text-field {
+  display: flex;
+  flex-direction: column;
+  gap: $md3-spacing-sm;
+  margin: $md3-spacing-lg 0;
+
+  label {
+    color: var(--md3-on-surface-variant);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    background-color: var(--md3-surface-variant, rgba(0, 0, 0, 0.04));
+    color: var(--md3-on-surface);
+    border: 1px solid var(--md3-outline);
+    border-radius: $md3-radius-xs;
+    padding: $md3-spacing-md;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:focus {
+      outline: none;
+      border-color: var(--md3-primary);
+      box-shadow: 0 0 0 3px rgba(200, 100, 150, 0.1);
+    }
+
+    &::placeholder {
+      color: var(--md3-on-surface-variant, rgba(0, 0, 0, 0.6));
+    }
+  }
+
+  &.md3-text-field-outlined {
+    input,
+    textarea {
+      background-color: transparent;
+      border: 2px solid var(--md3-outline);
+
+      &:focus {
+        border-color: var(--md3-primary);
+      }
+    }
+  }
+}
+
+/* ========== Chips ========== */
+.md3-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $md3-spacing-sm;
+  padding: $md3-spacing-sm $md3-spacing-md;
+  background-color: transparent;
+  color: var(--md3-on-surface-variant);
+  border: 1px solid var(--md3-outline);
+  border-radius: $md3-radius-xl;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.md3-chip-filled {
+    background-color: var(--md3-secondary-container);
+    color: var(--md3-on-secondary-container);
+    border: none;
+
+    &:hover {
+      box-shadow: $md3-elevation-1;
+    }
+  }
+
+  &.md3-chip-selected {
+    background-color: var(--md3-primary-container);
+    color: var(--md3-on-primary-container);
+    border: none;
+  }
+}
+
+/* ========== Lists ========== */
+.md3-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .md3-list-item {
+    display: flex;
+    align-items: center;
+    gap: $md3-spacing-md;
+    padding: $md3-spacing-md $md3-spacing-lg;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    color: var(--md3-on-surface);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .md3-list-item-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--md3-on-surface-variant);
+    }
+
+    .md3-list-item-content {
+      flex: 1;
+    }
+
+    .md3-list-item-headline {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--md3-on-surface);
+    }
+
+    .md3-list-item-supporting-text {
+      font-size: 14px;
+      color: var(--md3-on-surface-variant);
+    }
+  }
+}
+
+/* ========== Badges ========== */
+.md3-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  background-color: var(--md3-primary);
+  color: var(--md3-on-primary);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.md3-badge-small {
+    width: 6px;
+    height: 6px;
+    min-width: 0;
+    padding: 0;
+  }
+}
+
+/* ========== Dividers ========== */
+.md3-divider {
+  height: 1px;
+  background-color: var(--md3-outline);
+  margin: $md3-spacing-lg 0;
+}
+
+/* ========== Typography Styles ========== */
+.md3-display-large {
+  font-size: 57px;
+  font-weight: 400;
+  line-height: 64px;
+  letter-spacing: -0.25px;
+}
+
+.md3-display-medium {
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 52px;
+  letter-spacing: 0;
+}
+
+.md3-display-small {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 44px;
+  letter-spacing: 0;
+}
+
+.md3-headline-large {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 40px;
+  letter-spacing: 0;
+}
+
+.md3-headline-medium {
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 36px;
+  letter-spacing: 0;
+}
+
+.md3-headline-small {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0;
+}
+
+.md3-title-large {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: 0;
+}
+
+.md3-title-medium {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+}
+
+.md3-title-small {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.md3-body-large {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.md3-body-medium {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+
+.md3-body-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.md3-label-large {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.md3-label-medium {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}
+
+.md3-label-small {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}

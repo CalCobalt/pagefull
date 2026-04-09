@@ -1,0 +1,145 @@
+/* MD3 Colors Theme */
+// Generated from: files/avatar/donkomon.jpg
+// Source Color: #C86496
+
+// Light Mode
+$md3-light-primary: #c86496;
+$md3-light-on-primary: #ffffff;
+$md3-light-primary-container: #f0d9e8;
+$md3-light-on-primary-container: #5b203d;
+
+$md3-light-secondary: #c964c9;
+$md3-light-on-secondary: #ffffff;
+$md3-light-secondary-container: #f0d9f0;
+$md3-light-on-secondary-container: #5b205b;
+
+$md3-light-tertiary: #c96464;
+$md3-light-on-tertiary: #ffffff;
+$md3-light-tertiary-container: #f0dada;
+$md3-light-on-tertiary-container: #5b1f1f;
+
+$md3-light-background: #fffbfe;
+$md3-light-on-background: #1c1b1f;
+$md3-light-surface: #fffbfe;
+$md3-light-on-surface: #1c1b1f;
+$md3-light-outline: #79747e;
+
+// Dark Mode
+$md3-dark-primary: #e3b0c9;
+$md3-dark-on-primary: #481930;
+$md3-dark-primary-container: #933463;
+$md3-dark-on-primary-container: #f0d9e8;
+
+$md3-dark-secondary: #e3a5e3;
+$md3-dark-on-secondary: #3c1a3c;
+$md3-dark-secondary-container: #9a3c9a;
+$md3-dark-on-secondary-container: #f0d9f0;
+
+$md3-dark-tertiary: #e39090;
+$md3-dark-on-tertiary: #3c1818;
+$md3-dark-tertiary-container: #9a3636;
+$md3-dark-on-tertiary-container: #f0dada;
+
+$md3-dark-background: #1c1b1f;
+$md3-dark-on-background: #e7e0ec;
+$md3-dark-surface: #1c1b1f;
+$md3-dark-on-surface: #e7e0ec;
+$md3-dark-outline: #938f99;
+
+// Light color scheme
+:root[data-mode='light'] {
+  --md3-primary: #{$md3-light-primary};
+  --md3-on-primary: #{$md3-light-on-primary};
+  --md3-primary-container: #{$md3-light-primary-container};
+  --md3-on-primary-container: #{$md3-light-on-primary-container};
+
+  --md3-secondary: #{$md3-light-secondary};
+  --md3-on-secondary: #{$md3-light-on-secondary};
+  --md3-secondary-container: #{$md3-light-secondary-container};
+  --md3-on-secondary-container: #{$md3-light-on-secondary-container};
+
+  --md3-tertiary: #{$md3-light-tertiary};
+  --md3-on-tertiary: #{$md3-light-on-tertiary};
+  --md3-tertiary-container: #{$md3-light-tertiary-container};
+  --md3-on-tertiary-container: #{$md3-light-on-tertiary-container};
+
+  --md3-background: #{$md3-light-background};
+  --md3-on-background: #{$md3-light-on-background};
+  --md3-surface: #{$md3-light-surface};
+  --md3-on-surface: #{$md3-light-on-surface};
+  --md3-outline: #{$md3-light-outline};
+}
+
+// Default light theme
+:root {
+  --md3-primary: #{$md3-light-primary};
+  --md3-on-primary: #{$md3-light-on-primary};
+  --md3-primary-container: #{$md3-light-primary-container};
+  --md3-on-primary-container: #{$md3-light-on-primary-container};
+
+  --md3-secondary: #{$md3-light-secondary};
+  --md3-on-secondary: #{$md3-light-on-secondary};
+  --md3-secondary-container: #{$md3-light-secondary-container};
+  --md3-on-secondary-container: #{$md3-light-on-secondary-container};
+
+  --md3-tertiary: #{$md3-light-tertiary};
+  --md3-on-tertiary: #{$md3-light-on-tertiary};
+  --md3-tertiary-container: #{$md3-light-tertiary-container};
+  --md3-on-tertiary-container: #{$md3-light-on-tertiary-container};
+
+  --md3-background: #{$md3-light-background};
+  --md3-on-background: #{$md3-light-on-background};
+  --md3-surface: #{$md3-light-surface};
+  --md3-on-surface: #{$md3-light-on-surface};
+  --md3-outline: #{$md3-light-outline};
+}
+
+// Dark color scheme
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode='light']) {
+    --md3-primary: #{$md3-dark-primary};
+    --md3-on-primary: #{$md3-dark-on-primary};
+    --md3-primary-container: #{$md3-dark-primary-container};
+    --md3-on-primary-container: #{$md3-dark-on-primary-container};
+
+    --md3-secondary: #{$md3-dark-secondary};
+    --md3-on-secondary: #{$md3-dark-on-secondary};
+    --md3-secondary-container: #{$md3-dark-secondary-container};
+    --md3-on-secondary-container: #{$md3-dark-on-secondary-container};
+
+    --md3-tertiary: #{$md3-dark-tertiary};
+    --md3-on-tertiary: #{$md3-dark-on-tertiary};
+    --md3-tertiary-container: #{$md3-dark-tertiary-container};
+    --md3-on-tertiary-container: #{$md3-dark-on-tertiary-container};
+
+    --md3-background: #{$md3-dark-background};
+    --md3-on-background: #{$md3-dark-on-background};
+    --md3-surface: #{$md3-dark-surface};
+    --md3-on-surface: #{$md3-dark-on-surface};
+    --md3-outline: #{$md3-dark-outline};
+  }
+}
+
+// Dark theme explicit
+:root[data-mode='dark'] {
+  --md3-primary: #{$md3-dark-primary};
+  --md3-on-primary: #{$md3-dark-on-primary};
+  --md3-primary-container: #{$md3-dark-primary-container};
+  --md3-on-primary-container: #{$md3-dark-on-primary-container};
+
+  --md3-secondary: #{$md3-dark-secondary};
+  --md3-on-secondary: #{$md3-dark-on-secondary};
+  --md3-secondary-container: #{$md3-dark-secondary-container};
+  --md3-on-secondary-container: #{$md3-dark-on-secondary-container};
+
+  --md3-tertiary: #{$md3-dark-tertiary};
+  --md3-on-tertiary: #{$md3-dark-on-tertiary};
+  --md3-tertiary-container: #{$md3-dark-tertiary-container};
+  --md3-on-tertiary-container: #{$md3-dark-on-tertiary-container};
+
+  --md3-background: #{$md3-dark-background};
+  --md3-on-background: #{$md3-dark-on-background};
+  --md3-surface: #{$md3-dark-surface};
+  --md3-on-surface: #{$md3-dark-on-surface};
+  --md3-outline: #{$md3-dark-outline};
+}

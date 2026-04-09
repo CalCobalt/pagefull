@@ -24,8 +24,11 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@material/web": "^2.4.1",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3"
+    "bootstrap": "^5.3.3",
+    "jimp": "^1.6.1",
+    "vibrant": "^0.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

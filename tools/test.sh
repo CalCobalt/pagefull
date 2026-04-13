@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 中文注释：该脚本用于构建和测试站点内容。
 #
 # Build and test the site content
 #

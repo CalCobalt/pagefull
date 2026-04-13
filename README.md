@@ -2,83 +2,64 @@
 <div align="center">
 
   <!-- markdownlint-disable-next-line -->
-  # Chirpy Jekyll Theme
+  # CalCobalt 的个人博客
 
-  A minimal, responsive, and feature-rich Jekyll theme for technical writing.
+  基于 Jekyll Theme Chirpy，使用 MD3 HCT 色彩系统重构的个人站点。
 
-  [![CI](https://img.shields.io/github/actions/workflow/status/cotes2020/jekyll-theme-chirpy/ci.yml?logo=github)][ci]&nbsp;
-  [![Codacy Badge](https://img.shields.io/codacy/grade/4e556876a3c54d5e8f2d2857c4f43894?logo=codacy)][codacy]&nbsp;
-  [![GitHub license](https://img.shields.io/github/license/cotes2020/jekyll-theme-chirpy?color=goldenrod)][license]&nbsp;
-  [![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy?&logo=RubyGems&logoColor=ghostwhite&label=gem&color=orange)][gem]&nbsp;
-  [![Open in Dev Containers](https://img.shields.io/badge/Dev_Containers-Open-deepskyblue?logo=linuxcontainers)][open-container]
+  [![GitHub license](https://img.shields.io/github/license/CalCobalt/pagefull?color=goldenrod)][license]&nbsp;
+  [![Website](https://img.shields.io/website?url=https%3A%2F%2Fcalcobalt.icu)][site]
 
-  [**Live Demo** →][demo]
-
-  [![Devices Mockup](https://chirpy-img.netlify.app/commons/devices-mockup.png)][demo]
+  [**访问站点** →][site]
 
 </div>
 
-## Features
+## 关于本仓库
 
-- Dark Theme
-- Localized UI language
-- Pinned Posts on Home Page
-- Hierarchical Categories
-- Trending Tags
-- Table of Contents
-- Last Modified Date
-- Syntax Highlighting
-- Mathematical Expressions
-- Mermaid Diagrams & Flowcharts
-- Dark Mode Images
-- Embed Media
-- Comment Systems
-- Built-in Search
-- Atom Feeds
-- PWA
-- Web Analytics
-- SEO & Performance Optimization
+本仓库是 [CalCobalt][github] 的个人博客站点，托管于 [calcobalt.icu][site]。
 
-## Documentation
+原项目 fork 自 [jekyll-theme-chirpy][chirpy]，已进行大幅重构，引入 **Material Design 3（MD3）HCT 色彩系统**，整体配色与样式体系已与原主题有较大差异。
 
-To learn how to use, develop, and upgrade the project, please refer to the [Wiki][wiki].
+## 重构亮点
 
-## Contributing
+### MD3 HCT 色彩系统
 
-Contributions (_pull requests_, _issues_, and _discussions_) are what make the open-source community such an amazing place
-to learn, inspire, and create. Any contributions you make are greatly appreciated.
-For details, see the "[Contributing Guidelines][contribute-guide]".
+- 主色提取自站点头像（`files/avatar/donkomon.jpg`），源色为 `#C86496`
+- 使用 HCT（Hue-Chroma-Tone）色彩空间生成完整的 MD3 配色方案
+- 支持亮色 / 暗色双主题，色彩 token 通过 CSS 变量注入
+- 色彩数据以 `assets/md3-colors.json` 和 `_sass/themes/_md3-colors.scss` 形式存储，方便维护
 
-## Credits
+### 样式重构
 
-### Contributors
+- 亮色与暗色主题（`_sass/themes/_light.scss` / `_dark.scss`）全面切换为 MD3 色彩 token
+- 新增 `_sass/abstracts/_md3-utilities.scss`，提供 MD3 风格的响应式栅格、Flexbox、间距与文字工具类
+- 字体切换为 Roboto + Noto Sans SC + Microsoft Yahei，适配中文排版
 
-Thanks to [all the contributors][contributors] involved in the development of the project!
+## 功能特性
 
-[![all-contributors](https://contrib.rocks/image?repo=CalCobalt/pagefull&columns=16)][contributors]
-<sub> — Made with [contrib.rocks](https://contrib.rocks)</sub>
+- 深色 / 亮色主题（跟随系统或手动切换）
+- MD3 HCT 动态配色
+- 中文本地化界面（zh-CN）
+- 文章目录（TOC）、置顶、分类、标签
+- 代码语法高亮
+- 数学公式渲染（KaTeX）
+- Mermaid 图表
+- [Giscus][giscus] 评论系统
+- 内置全文搜索
+- Atom 订阅
+- PWA 离线支持
+- SEO 优化
 
-### Third-Party Assets
+## 致谢
 
-This project is built on the [Jekyll][jekyllrb] ecosystem and some [great libraries][lib], and is developed using [VS Code][vscode] as well as tools provided by [JetBrains][jetbrains] under a non-commercial open-source software license.
+本站基于 [jekyll-theme-chirpy][chirpy] 构建，感谢原作者 [Cotes Chung][cotes] 的出色工作。
 
-The avatar and favicon for the project's website are from [ClipartMAX][clipartmax].
+## 许可证
 
-## License
+本项目采用 [MIT License][license] 发布。
 
-This project is published under [MIT License][license].
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[ci]: https://github.com/cotes2020/jekyll-theme-chirpy/actions/workflows/ci.yml?query=event%3Apush+branch%3Amaster
-[codacy]: https://app.codacy.com/gh/cotes2020/jekyll-theme-chirpy/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade
-[license]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/LICENSE
-[open-container]: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/cotes2020/jekyll-theme-chirpy
-[jekyllrb]: https://jekyllrb.com/
-[clipartmax]: https://www.clipartmax.com/middle/m2i8b1m2K9Z5m2K9_ant-clipart-childrens-ant-cute/
-[demo]: https://cotes2020.github.io/chirpy-demo/
-[wiki]: https://github.com/cotes2020/jekyll-theme-chirpy/wiki
-[contribute-guide]: https://github.com/cotes2020/jekyll-theme-chirpy/blob/master/docs/CONTRIBUTING.md
-[contributors]: https://github.com/cotes2020/jekyll-theme-chirpy/graphs/contributors
-[lib]: https://github.com/cotes2020/chirpy-static-assets
-[vscode]: https://code.visualstudio.com/
-[jetbrains]: https://www.jetbrains.com/?from=jekyll-theme-chirpy
+[site]: https://calcobalt.icu
+[github]: https://github.com/CalCobalt
+[license]: https://github.com/CalCobalt/pagefull/blob/main/LICENSE
+[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy
+[cotes]: https://github.com/cotes2020
+[giscus]: https://giscus.app

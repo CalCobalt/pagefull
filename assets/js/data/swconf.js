@@ -4,6 +4,9 @@ permalink: '/:path/swconf.js'
 # Note that this file will be fetched by the ServiceWorker, so it will not be cached.
 ---
 
+{%- comment -%} 中文注释：该文件为站点生成前端配置脚本，请保持模板语法与输出结构一致。 {%- endcomment -%}
+
+
 const swconf = {
   {% if site.pwa.cache.enabled %}
     cacheName: 'chirpy-{{ "now" | date: "%s" }}',

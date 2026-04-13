@@ -2,9 +2,9 @@
 <div align="center">
 
   <!-- markdownlint-disable-next-line -->
-  # Chirpy Jekyll Theme
+  # Chirpy Jekyll 主题
 
-  A minimal, responsive, and feature-rich Jekyll theme for technical writing.
+  一个简洁、响应式、功能丰富的技术写作 Jekyll 主题。
 
   [![CI](https://img.shields.io/github/actions/workflow/status/cotes2020/jekyll-theme-chirpy/ci.yml?logo=github)][ci]&nbsp;
   [![Codacy Badge](https://img.shields.io/codacy/grade/4e556876a3c54d5e8f2d2857c4f43894?logo=codacy)][codacy]&nbsp;
@@ -12,61 +12,60 @@
   [![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy?&logo=RubyGems&logoColor=ghostwhite&label=gem&color=orange)][gem]&nbsp;
   [![Open in Dev Containers](https://img.shields.io/badge/Dev_Containers-Open-deepskyblue?logo=linuxcontainers)][open-container]
 
-  [**Live Demo** →][demo]
+  [**在线演示** →][demo]
 
   [![Devices Mockup](https://chirpy-img.netlify.app/commons/devices-mockup.png)][demo]
 
 </div>
 
-## Features
+## 功能特性
 
-- Dark Theme
-- Localized UI language
-- Pinned Posts on Home Page
-- Hierarchical Categories
-- Trending Tags
-- Table of Contents
-- Last Modified Date
-- Syntax Highlighting
-- Mathematical Expressions
-- Mermaid Diagrams & Flowcharts
-- Dark Mode Images
-- Embed Media
-- Comment Systems
-- Built-in Search
-- Atom Feeds
-- PWA
-- Web Analytics
-- SEO & Performance Optimization
+- 深色主题
+- 本地化界面语言
+- 首页置顶文章
+- 分层分类目录
+- 热门标签
+- 目录（TOC）
+- 最后修改时间
+- 代码语法高亮
+- 数学公式渲染
+- Mermaid 图表与流程图
+- 深色模式图片适配
+- 媒体嵌入
+- 评论系统
+- 内置搜索
+- Atom 订阅
+- PWA 支持
+- 网站访问分析
+- SEO 与性能优化
 
-## Documentation
+## 文档
 
-To learn how to use, develop, and upgrade the project, please refer to the [Wiki][wiki].
+如需了解项目的使用、开发与升级方式，请参考 [Wiki][wiki]。
 
-## Contributing
+## 参与贡献
 
-Contributions (_pull requests_, _issues_, and _discussions_) are what make the open-source community such an amazing place
-to learn, inspire, and create. Any contributions you make are greatly appreciated.
-For details, see the "[Contributing Guidelines][contribute-guide]".
+欢迎通过 _Pull Request_、_Issue_ 和 _Discussion_ 参与项目，共同完善这个开源主题。
+详细说明请查看「[贡献指南][contribute-guide]」。
 
-## Credits
+## 致谢
 
-### Contributors
+### 贡献者
 
-Thanks to [all the contributors][contributors] involved in the development of the project!
+感谢所有参与本项目开发的 [贡献者][contributors]！
 
 [![all-contributors](https://contrib.rocks/image?repo=CalCobalt/pagefull&columns=16)][contributors]
-<sub> — Made with [contrib.rocks](https://contrib.rocks)</sub>
+<sub> — 由 [contrib.rocks](https://contrib.rocks) 生成</sub>
 
-### Third-Party Assets
+### 第三方资源
 
-This project is built on the [Jekyll][jekyllrb] ecosystem and some [great libraries][lib], and is developed using [VS Code][vscode] as well as tools provided by [JetBrains][jetbrains] under a non-commercial open-source software license.
+本项目基于 [Jekyll][jekyllrb] 生态及多种优秀 [开源库][lib] 构建，开发过程主要使用 [VS Code][vscode]，并使用 [JetBrains][jetbrains] 提供的非商业开源许可工具支持。
 
-The avatar and favicon for the project's website are from [ClipartMAX][clipartmax].
+项目网站使用的头像与 favicon 来源于 [ClipartMAX][clipartmax]。
 
-## License
+## 许可证
 
-This project is published under [MIT License][license].
+本项目采用 [MIT License][license] 发布。
 
 [gem]: https://rubygems.org/gems/jekyll-theme-chirpy
 [ci]: https://github.com/cotes2020/jekyll-theme-chirpy/actions/workflows/ci.yml?query=event%3Apush+branch%3Amaster

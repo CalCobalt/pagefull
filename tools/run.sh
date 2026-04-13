@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 中文注释：该脚本用于站点本地运行或测试流程。
 #
 # Run jekyll serve and then launch the site
 

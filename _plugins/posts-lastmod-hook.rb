@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# 中文注释：该脚本用于站点构建流程中的插件处理逻辑。
 #
 # Check for changed posts
 

@@ -22,6 +22,8 @@ $md3-light-background: #fffbfe;
 $md3-light-on-background: #1c1b1f;
 $md3-light-surface: #fffbfe;
 $md3-light-on-surface: #1c1b1f;
+$md3-light-surface-variant: #e7e0ec;
+$md3-light-on-surface-variant: #49454f;
 $md3-light-outline: #79747e;
 
 // Dark Mode
@@ -44,6 +46,8 @@ $md3-dark-background: #1c1b1f;
 $md3-dark-on-background: #e7e0ec;
 $md3-dark-surface: #1c1b1f;
 $md3-dark-on-surface: #e7e0ec;
+$md3-dark-surface-variant: #49454f;
+$md3-dark-on-surface-variant: #cac4d0;
 $md3-dark-outline: #938f99;
 
 // Light color scheme
@@ -67,6 +71,8 @@ $md3-dark-outline: #938f99;
   --md3-on-background: #{$md3-light-on-background};
   --md3-surface: #{$md3-light-surface};
   --md3-on-surface: #{$md3-light-on-surface};
+  --md3-surface-variant: #{$md3-light-surface-variant};
+  --md3-on-surface-variant: #{$md3-light-on-surface-variant};
   --md3-outline: #{$md3-light-outline};
 }
 
@@ -91,6 +97,8 @@ $md3-dark-outline: #938f99;
   --md3-on-background: #{$md3-light-on-background};
   --md3-surface: #{$md3-light-surface};
   --md3-on-surface: #{$md3-light-on-surface};
+  --md3-surface-variant: #{$md3-light-surface-variant};
+  --md3-on-surface-variant: #{$md3-light-on-surface-variant};
   --md3-outline: #{$md3-light-outline};
 }
 
@@ -116,6 +124,8 @@ $md3-dark-outline: #938f99;
     --md3-on-background: #{$md3-dark-on-background};
     --md3-surface: #{$md3-dark-surface};
     --md3-on-surface: #{$md3-dark-on-surface};
+    --md3-surface-variant: #{$md3-dark-surface-variant};
+    --md3-on-surface-variant: #{$md3-dark-on-surface-variant};
     --md3-outline: #{$md3-dark-outline};
   }
 }
@@ -141,5 +151,7 @@ $md3-dark-outline: #938f99;
   --md3-on-background: #{$md3-dark-on-background};
   --md3-surface: #{$md3-dark-surface};
   --md3-on-surface: #{$md3-dark-on-surface};
+  --md3-surface-variant: #{$md3-dark-surface-variant};
+  --md3-on-surface-variant: #{$md3-dark-on-surface-variant};
   --md3-outline: #{$md3-dark-outline};
 }

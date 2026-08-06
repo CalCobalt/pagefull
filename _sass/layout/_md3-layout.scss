@@ -1,5 +1,9 @@
 /* Material Design 3 Layout */
 
+// Hairline borders/dividers use the outline-variant role so they stay
+// visible in both light and dark modes (never hardcode rgba(0,0,0,...)).
+$md3-divider-color: var(--md3-outline-variant, rgba(0, 0, 0, 0.12));
+
 // MD3 Spacing System
 $md3-spacing-xs: 4px;
 $md3-spacing-sm: 8px;
@@ -59,7 +63,7 @@ $md3-radius-xl: 28px;
   /* Card sections */
   .md3-card-header {
     padding: $md3-spacing-lg;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid $md3-divider-color;
     margin: (-$md3-spacing-lg) (-$md3-spacing-lg) $md3-spacing-lg (-$md3-spacing-lg);
   }
 
@@ -72,7 +76,7 @@ $md3-radius-xl: 28px;
     gap: $md3-spacing-md;
     padding: $md3-spacing-lg;
     margin: $md3-spacing-lg (-$md3-spacing-lg) (-$md3-spacing-lg) (-$md3-spacing-lg);
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid $md3-divider-color;
   }
 }
 
@@ -93,11 +97,11 @@ $md3-radius-xl: 28px;
   text-decoration: none;
 
   &:hover {
-    transform: translateY(-2px);
+    box-shadow: $md3-elevation-1;
   }
 
   &:active {
-    transform: translateY(0);
+    box-shadow: $md3-elevation-0;
   }
 
   /* Filled Button */
@@ -106,7 +110,7 @@ $md3-radius-xl: 28px;
     color: var(--md3-on-primary);
 
     &:hover {
-      box-shadow: $md3-elevation-1;
+      box-shadow: $md3-elevation-2;
     }
   }
 
@@ -155,7 +159,7 @@ $md3-radius-xl: 28px;
 
   .md3-drawer-header {
     padding: $md3-spacing-xl;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid $md3-divider-color;
   }
 
   .md3-drawer-content {
@@ -175,7 +179,7 @@ $md3-radius-xl: 28px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: rgba(200, 100, 150, 0.08);
+      background-color: color-mix(in srgb, var(--md3-primary) 10%, transparent);
       color: var(--md3-on-surface);
     }
 
@@ -187,7 +191,7 @@ $md3-radius-xl: 28px;
 
   .md3-drawer-footer {
     padding: $md3-spacing-xl;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid $md3-divider-color;
   }
 }
 
@@ -242,7 +246,7 @@ $md3-radius-xl: 28px;
     &:focus {
       outline: none;
       border-color: var(--md3-primary);
-      box-shadow: 0 0 0 3px rgba(200, 100, 150, 0.1);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--md3-primary) 20%, transparent);
     }
 
     &::placeholder {
@@ -278,7 +282,7 @@ $md3-radius-xl: 28px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: color-mix(in srgb, var(--md3-on-surface) 8%, transparent);
   }
 
   &.md3-chip-filled {
@@ -309,13 +313,13 @@ $md3-radius-xl: 28px;
     align-items: center;
     gap: $md3-spacing-md;
     padding: $md3-spacing-md $md3-spacing-lg;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid $md3-divider-color;
     color: var(--md3-on-surface);
     text-decoration: none;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: color-mix(in srgb, var(--md3-on-surface) 8%, transparent);
     }
 
     .md3-list-item-icon {

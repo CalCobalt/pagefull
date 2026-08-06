@@ -23,3 +23,8 @@ package-lock.json
 !.vscode/tasks.json
 
 # Misc
+build.log
+
+# Design source files (keep only web-ready images in git)
+*.sai2
+*.psd

@@ -1,28 +1,32 @@
-/* MD3 Post Card Styles */
+/* MD3 Expressive — Post Card & Page Styles */
+
+@use '../abstracts/md3-tokens' as *;
 
 %md3-post-card {
   background-color: var(--md3-surface);
   color: var(--md3-on-surface);
-  border-radius: 12px;
+  border-radius: $md3-radius-xl; /* active shape */
   overflow: hidden;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s $md3-easing, background-color 0.3s $md3-easing;
+  box-shadow: $md3-elevation-1;
+  border: 1px solid var(--md3-outline-variant);
 
   &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+    box-shadow: $md3-elevation-3;
+    background-color: color-mix(in srgb, var(--md3-on-surface) 2%, var(--md3-surface));
+    border-color: color-mix(in srgb, var(--md3-primary) 40%, var(--md3-outline-variant));
   }
 }
 
 .post-preview {
   @extend %md3-post-card;
 
-  padding: 16px;
+  padding: 24px;
   margin-bottom: 16px;
 
   .post-title {
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 700;
     color: var(--md3-on-surface);
     margin-bottom: 8px;
     text-decoration: none;
@@ -38,6 +42,7 @@
     gap: 12px;
     margin: 12px 0;
     font-size: 12px;
+    font-weight: 500;
     color: var(--md3-on-surface-variant);
 
     .post-date {
@@ -75,7 +80,7 @@
   .post-excerpt {
     font-size: 14px;
     color: var(--md3-on-surface-variant);
-    line-height: 1.6;
+    line-height: 1.7;
     margin-top: 12px;
   }
 }
@@ -87,13 +92,14 @@
   .category-item {
     @extend %md3-post-card;
 
-    padding: 12px 16px;
+    padding: 16px 20px;
     margin-bottom: 8px;
+    border-radius: $md3-radius-lg;
 
     .archive-title,
     .category-title {
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--md3-on-surface);
     }
 
@@ -101,15 +107,15 @@
     .category-count {
       background-color: var(--md3-primary-container);
       color: var(--md3-on-primary-container);
-      padding: 4px 8px;
-      border-radius: 8px;
+      padding: 4px 10px;
+      border-radius: $md3-radius-full;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 700;
     }
   }
 }
 
-/* MD3 Tags */
+/* MD3 Tags — pill chips */
 .tags-group {
   display: flex;
   flex-wrap: wrap;
@@ -119,22 +125,46 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 12px;
+    height: 36px;
+    padding: 0 16px;
     background-color: var(--md3-secondary-container);
     color: var(--md3-on-secondary-container);
-    border-radius: 20px;
-    font-size: 13px;
+    border-radius: $md3-radius-full;
+    font-size: 14px;
+    font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.25s $md3-easing, color 0.25s $md3-easing,
+      box-shadow 0.25s $md3-easing;
 
     &:hover {
       background-color: var(--md3-primary);
       color: var(--md3-on-primary);
+      box-shadow: $md3-elevation-1;
     }
   }
 }
 
-/* MD3 Pagination */
+/* MD3 Tag page — unify the tag chips into pills (overrides upstream) */
+#tags .tag,
+#page-tag .tag {
+  border-radius: $md3-radius-full;
+  padding: 0 16px;
+  height: 36px;
+  line-height: 36px;
+  display: inline-block;
+  font-weight: 600;
+  border-color: var(--md3-outline-variant) !important;
+  box-shadow: none;
+  transition: background-color 0.25s $md3-easing, color 0.25s $md3-easing;
+
+  &:hover {
+    background-color: var(--md3-primary);
+    color: var(--md3-on-primary);
+    border-color: var(--md3-primary) !important;
+  }
+}
+
+/* MD3 Pagination — pill items */
 .pagination {
   display: flex;
   gap: 8px;
@@ -147,13 +177,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      border-radius: $md3-radius-full;
       font-size: 14px;
+      font-weight: 600;
       text-decoration: none;
       color: var(--md3-on-surface);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.25s $md3-easing, color 0.25s $md3-easing,
+        box-shadow 0.25s $md3-easing;
     }
 
     a {
@@ -163,12 +195,14 @@
       &:hover {
         background-color: var(--md3-primary);
         color: var(--md3-on-primary);
+        box-shadow: $md3-elevation-1;
       }
     }
 
     &.active span {
       background-color: var(--md3-primary);
       color: var(--md3-on-primary);
+      box-shadow: $md3-elevation-1;
     }
 
     &.disabled span {
@@ -199,6 +233,7 @@
 
     &.active {
       color: var(--md3-on-surface);
+      font-weight: 600;
     }
 
     &::before {
@@ -216,13 +251,13 @@
 /* MD3 TOC (Table of Contents) */
 .toc {
   background-color: var(--md3-surface-variant);
-  border-radius: 12px;
+  border-radius: $md3-radius-lg;
   padding: 16px;
   margin: 16px 0;
 
   .toc-title {
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--md3-on-surface);
     margin-bottom: 12px;
   }
@@ -235,7 +270,7 @@
 
     li {
       padding: 6px 0 6px 16px;
-      border-left: 2px solid transparent;
+      border-left: 3px solid transparent;
       color: var(--md3-on-surface-variant);
       font-size: 13px;
 

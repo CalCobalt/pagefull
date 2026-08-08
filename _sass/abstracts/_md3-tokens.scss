@@ -1,0 +1,42 @@
+/* Material Design 3 Expressive — shared design tokens
+ *
+ * Consumed by `_md3-layout.scss` and `_md3-pages.scss` via
+ * `@use '../abstracts/md3-tokens' as *;`.
+ */
+
+// MD3 Spacing System
+$md3-spacing-xs: 4px;
+$md3-spacing-sm: 8px;
+$md3-spacing-md: 12px;
+$md3-spacing-lg: 16px;
+$md3-spacing-xl: 24px;
+$md3-spacing-xxl: 32px;
+
+// MD3 motion easing
+$md3-easing: cubic-bezier(0.2, 0, 0, 1);
+$md3-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+// MD3 Elevation/Shadow — soft, tinted, spread-heavy (Expressive)
+$md3-elevation-0: none;
+$md3-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+$md3-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+$md3-elevation-3: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
+$md3-elevation-4: 0 2px 3px rgba(0, 0, 0, 0.3), 0 6px 10px 4px rgba(0, 0, 0, 0.15);
+$md3-elevation-5: 0 4px 4px rgba(0, 0, 0, 0.3), 0 8px 12px 6px rgba(0, 0, 0, 0.15);
+
+// MD3 Border Radius — Expressive "active shape" scale
+$md3-radius-xs: 8px;
+$md3-radius-sm: 12px;
+$md3-radius-md: 16px;
+$md3-radius-lg: 20px;
+$md3-radius-xl: 28px;
+$md3-radius-full: 999px;
+
+// MD3 state-layer helper: color-mix of a token color at a percentage.
+@function md3-state($color, $pct) {
+  @return color-mix(in srgb, $color $pct, transparent);
+}
+
+// Hairline borders/dividers use the outline-variant role so they stay
+// visible in both light and dark modes (never hardcode rgba(0,0,0,...)).
+$md3-divider-color: var(--md3-outline-variant, rgba(0, 0, 0, 0.12));

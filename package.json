@@ -27,7 +27,7 @@
   "dependencies": {
     "@material/material-color-utilities": "^0.3.0",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.8",
     "node-vibrant": "^3.1.6"
   },
   "devDependencies": {

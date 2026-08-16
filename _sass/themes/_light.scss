@@ -39,13 +39,13 @@
   --sidebar-border-color: var(--md3-primary-container, #efefef);
   --sidebar-muted-color: var(--md3-outline, #545454);
   --sidebar-active-color: var(--md3-primary, #1d1d1d);
-  --sidebar-hover-bg: rgba(200, 100, 150, 0.1);
+  --sidebar-hover-bg: color-mix(in srgb, var(--md3-primary) 10%, transparent);
   --sidebar-btn-bg: var(--md3-surface, white);
   --sidebar-btn-color: var(--md3-primary, #c86496);
   --avatar-border-color: var(--md3-surface, white);
 
   /* Topbar - MD3 Colors */
-  --topbar-bg: rgba(255, 255, 255, 0.7);
+  --topbar-bg: var(--md3-surface);
   --topbar-text-color: var(--md3-on-surface, rgb(78, 78, 78));
   --search-border-color: var(--md3-primary-container, rgb(240, 240, 240));
   --search-icon-color: #c2c6cc;

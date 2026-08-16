@@ -1,27 +1,13 @@
-/* Material Design 3 Layout */
+/* Material Design 3 Expressive — Layout & Components
+ *
+ * Design tokens follow the MD3 Expressive direction:
+ *   - large corner radii (28px "active shape", pill buttons)
+ *   - soft tinted elevation shadows
+ *   - state-layer hovers (no geometric displacement)
+ *   - springy motion with the MD3 standard easing
+ */
 
-// MD3 Spacing System
-$md3-spacing-xs: 4px;
-$md3-spacing-sm: 8px;
-$md3-spacing-md: 12px;
-$md3-spacing-lg: 16px;
-$md3-spacing-xl: 24px;
-$md3-spacing-xxl: 32px;
-
-// MD3 Elevation/Shadow
-$md3-elevation-0: none;
-$md3-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.12);
-$md3-elevation-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.12);
-$md3-elevation-3: 0 4px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.12);
-$md3-elevation-4: 0 6px 12px rgba(0, 0, 0, 0.3), 0 6px 16px rgba(0, 0, 0, 0.12);
-$md3-elevation-5: 0 8px 16px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.12);
-
-// MD3 Border Radius
-$md3-radius-xs: 4px;
-$md3-radius-sm: 8px;
-$md3-radius-md: 12px;
-$md3-radius-lg: 16px;
-$md3-radius-xl: 28px;
+@use '../abstracts/md3-tokens' as *;
 
 /* ========== Container & Grid ========== */
 .md3-container {
@@ -34,45 +20,47 @@ $md3-radius-xl: 28px;
 .md3-card {
   background-color: var(--md3-surface);
   color: var(--md3-on-surface);
-  border-radius: $md3-radius-md;
+  border-radius: $md3-radius-xl;
   box-shadow: $md3-elevation-1;
-  padding: $md3-spacing-lg;
-  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: $md3-spacing-xl;
+  transition: box-shadow 0.3s $md3-easing, background-color 0.3s $md3-easing;
 
   &:hover {
-    box-shadow: $md3-elevation-2;
+    box-shadow: $md3-elevation-3;
+    background-color: color-mix(in srgb, var(--md3-on-surface) 2%, var(--md3-surface));
   }
 
   &.md3-card-elevated {
     box-shadow: $md3-elevation-1;
 
     &:hover {
-      box-shadow: $md3-elevation-2;
+      box-shadow: $md3-elevation-3;
     }
   }
 
   &.md3-card-outlined {
     box-shadow: none;
-    border: 1px solid var(--md3-outline);
+    border: 1px solid var(--md3-outline-variant);
   }
 
   /* Card sections */
   .md3-card-header {
-    padding: $md3-spacing-lg;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-    margin: (-$md3-spacing-lg) (-$md3-spacing-lg) $md3-spacing-lg (-$md3-spacing-lg);
+    padding: $md3-spacing-lg $md3-spacing-xl;
+    border-bottom: 1px solid $md3-divider-color;
+    margin: (-$md3-spacing-xl) (-$md3-spacing-xl) $md3-spacing-xl (-$md3-spacing-xl);
+    border-radius: $md3-radius-xl $md3-radius-xl 0 0;
   }
 
   .md3-card-content {
-    padding: $md3-spacing-lg 0;
+    padding: $md3-spacing-xl 0;
   }
 
   .md3-card-actions {
     display: flex;
     gap: $md3-spacing-md;
-    padding: $md3-spacing-lg;
-    margin: $md3-spacing-lg (-$md3-spacing-lg) (-$md3-spacing-lg) (-$md3-spacing-lg);
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    padding: $md3-spacing-lg $md3-spacing-xl;
+    margin: $md3-spacing-xl (-$md3-spacing-xl) (-$md3-spacing-xl) (-$md3-spacing-xl);
+    border-top: 1px solid $md3-divider-color;
   }
 }
 
@@ -82,30 +70,32 @@ $md3-radius-xl: 28px;
   align-items: center;
   justify-content: center;
   gap: $md3-spacing-sm;
-  padding: $md3-spacing-md $md3-spacing-lg;
+  height: 44px;
+  padding: 0 $md3-spacing-xl;
   border: none;
-  border-radius: $md3-radius-lg;
+  border-radius: $md3-radius-full; /* pill shape */
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.25s $md3-easing, box-shadow 0.25s $md3-easing,
+    color 0.25s $md3-easing;
   text-decoration: none;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+  position: relative;
 
   /* Filled Button */
   &.md3-button-filled {
     background-color: var(--md3-primary);
     color: var(--md3-on-primary);
+    box-shadow: $md3-elevation-1;
 
     &:hover {
+      box-shadow: $md3-elevation-2;
+      background-color: color-mix(in srgb, var(--md3-primary) 92%, black);
+    }
+
+    &:active {
       box-shadow: $md3-elevation-1;
     }
   }
@@ -114,10 +104,11 @@ $md3-radius-xl: 28px;
   &.md3-button-outlined {
     background-color: transparent;
     color: var(--md3-primary);
-    border: 1px solid var(--md3-outline);
+    border: 1.5px solid var(--md3-outline);
 
     &:hover {
-      background-color: color-mix(in srgb, var(--md3-primary) 12%, transparent);
+      background-color: md3-state(var(--md3-primary), 10%);
+      border-color: var(--md3-primary);
     }
   }
 
@@ -125,10 +116,11 @@ $md3-radius-xl: 28px;
   &.md3-button-text {
     background-color: transparent;
     color: var(--md3-primary);
-    padding: $md3-spacing-md;
+    padding: 0 $md3-spacing-lg;
+    height: 40px;
 
     &:hover {
-      background-color: color-mix(in srgb, var(--md3-primary) 12%, transparent);
+      background-color: md3-state(var(--md3-primary), 10%);
     }
   }
 
@@ -139,6 +131,7 @@ $md3-radius-xl: 28px;
 
     &:hover {
       box-shadow: $md3-elevation-1;
+      background-color: color-mix(in srgb, var(--md3-secondary-container) 92%, black);
     }
   }
 }
@@ -155,39 +148,42 @@ $md3-radius-xl: 28px;
 
   .md3-drawer-header {
     padding: $md3-spacing-xl;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid $md3-divider-color;
   }
 
   .md3-drawer-content {
     flex: 1;
-    padding: $md3-spacing-md 0;
+    padding: $md3-spacing-sm 0;
   }
 
   .md3-drawer-item {
     display: flex;
     align-items: center;
     gap: $md3-spacing-md;
-    padding: $md3-spacing-md $md3-spacing-lg;
+    height: 56px;
+    padding: 0 $md3-spacing-lg;
     margin: $md3-spacing-xs $md3-spacing-md;
-    border-radius: $md3-radius-lg;
+    border-radius: $md3-radius-xl; /* active shape */
     color: var(--md3-on-surface-variant);
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    transition: background-color 0.25s $md3-easing, color 0.25s $md3-easing;
 
     &:hover {
-      background-color: rgba(200, 100, 150, 0.08);
+      background-color: md3-state(var(--md3-on-surface-variant), 8%);
       color: var(--md3-on-surface);
     }
 
     &.active {
       background-color: var(--md3-primary-container);
       color: var(--md3-on-primary-container);
+      font-weight: 600;
     }
   }
 
   .md3-drawer-footer {
     padding: $md3-spacing-xl;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid $md3-divider-color;
   }
 }
 
@@ -196,7 +192,7 @@ $md3-radius-xl: 28px;
   background-color: var(--md3-surface);
   color: var(--md3-on-surface);
   padding: $md3-spacing-md $md3-spacing-lg;
-  border-bottom: 1px solid var(--md3-outline);
+  border-bottom: 1px solid var(--md3-outline-variant);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -204,7 +200,7 @@ $md3-radius-xl: 28px;
 
   .md3-topbar-title {
     font-size: 28px;
-    font-weight: 500;
+    font-weight: 600;
     flex: 1;
   }
 
@@ -225,28 +221,31 @@ $md3-radius-xl: 28px;
   label {
     color: var(--md3-on-surface-variant);
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.4px;
   }
 
   input,
   textarea {
-    background-color: var(--md3-surface-variant, rgba(0, 0, 0, 0.04));
+    background-color: var(--md3-surface-variant);
     color: var(--md3-on-surface);
-    border: 1px solid var(--md3-outline);
-    border-radius: $md3-radius-xs;
-    padding: $md3-spacing-md;
+    border: 1.5px solid transparent;
+    border-radius: $md3-radius-md;
+    padding: $md3-spacing-lg;
     font-family: inherit;
-    font-size: 14px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    transition: border-color 0.25s $md3-easing, box-shadow 0.25s $md3-easing,
+      background-color 0.25s $md3-easing;
 
     &:focus {
       outline: none;
       border-color: var(--md3-primary);
-      box-shadow: 0 0 0 3px rgba(200, 100, 150, 0.1);
+      box-shadow: 0 0 0 4px md3-state(var(--md3-primary), 16%);
+      background-color: var(--md3-surface);
     }
 
     &::placeholder {
-      color: var(--md3-on-surface-variant, rgba(0, 0, 0, 0.6));
+      color: var(--md3-on-surface-variant);
     }
   }
 
@@ -254,7 +253,7 @@ $md3-radius-xl: 28px;
     input,
     textarea {
       background-color: transparent;
-      border: 2px solid var(--md3-outline);
+      border: 1.5px solid var(--md3-outline);
 
       &:focus {
         border-color: var(--md3-primary);
@@ -268,17 +267,20 @@ $md3-radius-xl: 28px;
   display: inline-flex;
   align-items: center;
   gap: $md3-spacing-sm;
-  padding: $md3-spacing-sm $md3-spacing-md;
+  height: 40px;
+  padding: 0 $md3-spacing-lg;
   background-color: transparent;
   color: var(--md3-on-surface-variant);
-  border: 1px solid var(--md3-outline);
-  border-radius: $md3-radius-xl;
+  border: 1.5px solid var(--md3-outline-variant);
+  border-radius: $md3-radius-full;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.25s $md3-easing, border-color 0.25s $md3-easing,
+    box-shadow 0.25s $md3-easing;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: md3-state(var(--md3-on-surface), 8%);
   }
 
   &.md3-chip-filled {
@@ -308,14 +310,15 @@ $md3-radius-xl: 28px;
     display: flex;
     align-items: center;
     gap: $md3-spacing-md;
-    padding: $md3-spacing-md $md3-spacing-lg;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    min-height: 56px;
+    padding: $md3-spacing-sm $md3-spacing-lg;
+    border-radius: $md3-radius-lg;
     color: var(--md3-on-surface);
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.25s $md3-easing;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: md3-state(var(--md3-on-surface), 8%);
     }
 
     .md3-list-item-icon {
@@ -324,6 +327,7 @@ $md3-radius-xl: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 50%;
       color: var(--md3-on-surface-variant);
     }
 
@@ -333,7 +337,7 @@ $md3-radius-xl: 28px;
 
     .md3-list-item-headline {
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--md3-on-surface);
     }
 
@@ -349,18 +353,19 @@ $md3-radius-xl: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 6px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
   background-color: var(--md3-primary);
   color: var(--md3-on-primary);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: 0.3px;
 
   &.md3-badge-small {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     min-width: 0;
     padding: 0;
   }
@@ -369,70 +374,70 @@ $md3-radius-xl: 28px;
 /* ========== Dividers ========== */
 .md3-divider {
   height: 1px;
-  background-color: var(--md3-outline);
+  background-color: var(--md3-outline-variant);
   margin: $md3-spacing-lg 0;
 }
 
-/* ========== Typography Styles ========== */
+/* ========== Typography — MD3 Expressive scale ========== */
 .md3-display-large {
-  font-size: 57px;
+  font-size: 64px;
+  font-weight: 400;
+  line-height: 72px;
+  letter-spacing: -0.5px;
+}
+
+.md3-display-medium {
+  font-size: 52px;
   font-weight: 400;
   line-height: 64px;
   letter-spacing: -0.25px;
 }
 
-.md3-display-medium {
-  font-size: 45px;
+.md3-display-small {
+  font-size: 44px;
   font-weight: 400;
   line-height: 52px;
   letter-spacing: 0;
 }
 
-.md3-display-small {
+.md3-headline-large {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 48px;
+  letter-spacing: 0;
+}
+
+.md3-headline-medium {
   font-size: 36px;
   font-weight: 400;
   line-height: 44px;
   letter-spacing: 0;
 }
 
-.md3-headline-large {
+.md3-headline-small {
   font-size: 32px;
   font-weight: 400;
   line-height: 40px;
   letter-spacing: 0;
 }
 
-.md3-headline-medium {
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 36px;
-  letter-spacing: 0;
-}
-
-.md3-headline-small {
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 32px;
-  letter-spacing: 0;
-}
-
 .md3-title-large {
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 28px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
   letter-spacing: 0;
 }
 
 .md3-title-medium {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 24px;
   letter-spacing: 0.15px;
 }
 
 .md3-title-small {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   letter-spacing: 0.1px;
 }
@@ -460,21 +465,21 @@ $md3-radius-xl: 28px;
 
 .md3-label-large {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 20px;
   letter-spacing: 0.1px;
 }
 
 .md3-label-medium {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.5px;
 }
 
 .md3-label-small {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.5px;
 }

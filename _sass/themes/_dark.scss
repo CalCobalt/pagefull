@@ -38,8 +38,8 @@
   --sidebar-border-color: var(--md3-outline, #a89fb0);
   --sidebar-muted-color: var(--md3-outline, #868686);
   --sidebar-active-color: var(--md3-on-surface, rgb(255, 255, 255, 0.95));
-  --sidebar-hover-bg: rgba(227, 176, 201, 0.15);
-  --sidebar-btn-bg: rgba(227, 176, 201, 0.12);
+  --sidebar-hover-bg: color-mix(in srgb, var(--md3-primary) 14%, transparent);
+  --sidebar-btn-bg: color-mix(in srgb, var(--md3-primary) 12%, transparent);
   --sidebar-btn-color: var(--md3-primary, #e3b0c9);
   --avatar-border-color: rgba(206, 206, 206, 0.9);
 

@@ -1,19 +1,24 @@
 ---
 name: md3-color-picker
-description: '**WORKFLOW SKILL** — Access an image and perform MD3 color extraction to save a color palette. USE FOR: extracting colors from images for Material Design 3 themes, generating color schemes from visual assets using HCT color space.'
+description: '**WORKFLOW SKILL** — Extract MD3 colors from an image into a JSON palette. USE FOR: generating Material Design 3 color schemes from visual assets using the HCT color space.'
 ---
 
 # MD3 Color Picker
 
 ## Quick Checklist
 
-1. **Access the Image**: Use the `view_image` tool to view the specified image file.
-2. **Extract Colors Automatically**: Use HCT (Hue-Chroma-Tone) color space to automatically extract prominent colors from the image, mapping to MD3 roles (primary, secondary, tertiary, etc.).
-3. **Format as MD3 Scheme**: Generate a complete MD3 color scheme with all required color tokens.
-4. **Save Color Palette**: Save the extracted color palette in JSON format to a file (e.g., `assets/colors.json`).
+1. **Access the Image**: Read the image file at the given path (e.g. with the Read tool).
+2. **Extract Colors Automatically**: Run the bundled extractor to get a real HCT scheme:
+   `npm install` then `node scripts/extract-md3-colors.mjs <image-path> [output-path]`.
+3. **Refresh the Theme**: The SCSS theme in `_sass/themes/_md3-colors.scss` is hand-tuned
+   from the generated palette. Copy the new primary/secondary/tertiary roles over the
+   `$md3-light-*` / `$md3-dark-*` variables, keeping the hand-tuned brand values where the
+   generated ones are too muted. Check every on-* color keeps ≥ 4.5:1 contrast against its
+   background.
+4. **Save Color Palette**: The script writes the palette to `assets/colors.json` by default.
 
 ## Quality Criteria
 
-- Ensure colors follow MD3 contrast and accessibility guidelines using HCT calculations.
-- Validate the color scheme by checking against MD3 documentation.
-- Save the palette in JSON format for easy integration into the project.
+- Use the official `@material/material-color-utilities` HCT pipeline, not HSL approximations.
+- Verify WCAG contrast (≥ 4.5:1 for body text) for every on-* / container pairing.
+- Keep `assets/colors.json` and `_sass/themes/_md3-colors.scss` in sync.

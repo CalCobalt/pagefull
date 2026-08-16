@@ -45,6 +45,50 @@ body {
   color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   font-family: v.$font-family-base;
+  line-height: 1.6;
+}
+
+/* MD3 Expressive typography — overrides Bootstrap & upstream heading scales */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: v.$font-family-heading;
+  color: var(--heading-color);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3vw, 2.125rem);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: clamp(1.375rem, 2.25vw, 1.75rem);
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 1.375rem;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 h1.dynamic-title {
@@ -97,6 +141,8 @@ main {
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
 
+  /* The MD3 Expressive hover (see _md3-pages.scss) replaces the upstream
+     gray overlay; keep this one inert. */
   &::before {
     @extend %rounded;
 
@@ -107,11 +153,12 @@ main {
     background-color: var(--card-hovor-bg);
     opacity: 0;
     transition: opacity 0.35s ease-in-out;
+    pointer-events: none;
   }
 
   &:hover {
     &::before {
-      opacity: 0.3;
+      opacity: 0;
     }
   }
 }
